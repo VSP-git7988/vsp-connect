@@ -34,10 +34,18 @@ export async function authDb() {
     },
   );
 }
-export function eventDb() {
+/**
+ * Service-role client. Server-only. Used to record validated anonymous events
+ * and, in V2, to read approved knowledge and store AI conversations, leads and
+ * usage. Never reachable from the browser.
+ */
+export function serviceDb() {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     { auth: { persistSession: false } },
   );
 }
+export const eventDb = serviceDb;
+export const serviceConfigured = () =>
+  configured && Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY);

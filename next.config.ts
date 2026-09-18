@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
 const config: NextConfig = {
   poweredByHeader: false,
+  // Page-data collection runs one worker per core by default, which exhausts
+  // memory on small build machines. Opt in with NEXT_BUILD_CPUS=2; unset, the
+  // build behaves exactly as before.
+  ...(Number(process.env.NEXT_BUILD_CPUS) > 0
+    ? { experimental: { cpus: Number(process.env.NEXT_BUILD_CPUS) } }
+    : {}),
   async headers() {
     return [
       {

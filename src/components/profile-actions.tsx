@@ -15,21 +15,10 @@ import {
   Copy,
   ArrowUpRight,
 } from "lucide-react";
-import type { Profile, EventType } from "@/lib/types";
+import type { Profile } from "@/lib/types";
 import { contactUrls } from "@/lib/contact";
-export function track(profileId: string, event: EventType) {
-  void fetch("/api/events", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      profile_id: profileId,
-      event_type: event,
-      referrer: document.referrer ? new URL(document.referrer).origin : null,
-      source: new URLSearchParams(location.search).get("source"),
-    }),
-    keepalive: true,
-  }).catch(() => {});
-}
+import { track } from "@/lib/analytics-client";
+export { track };
 export function ProfileActions({
   profile: p,
   url,

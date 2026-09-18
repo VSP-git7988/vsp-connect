@@ -43,5 +43,14 @@ export const eventTypes = [
   "booking_clicked",
   "profile_shared",
   "qr_view",
+  // V2 AI representative
+  "ai_opened",
+  "ai_message_sent",
+  "suggested_question_clicked",
+  "lead_started",
+  "lead_created",
+  "meeting_intent",
+  "solution_viewed",
+  "booking_from_ai",
 ] as const;
 export type EventType = (typeof eventTypes)[number];

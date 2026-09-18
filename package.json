@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "test": "playwright test",
     "test:database": "node --import tsx scripts/check-database.ts",
-    "test:contact": "node --import tsx scripts/check-contact.tsx"
+    "test:contact": "node --import tsx scripts/check-contact.tsx",
+    "test:ai": "node --import tsx scripts/check-ai.ts"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +20,7 @@
   "type": "module",
   "private": true,
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.126.0",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.116.0",
     "framer-motion": "^13.4.0",

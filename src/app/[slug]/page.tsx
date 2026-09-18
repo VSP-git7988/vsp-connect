@@ -6,6 +6,8 @@ import { Avatar } from "@/components/avatar";
 import { ProfileActions } from "@/components/profile-actions";
 import { Reveal } from "@/components/reveal";
 import { safeWebUrl } from "@/lib/contact";
+import { AIAssistant } from "@/components/ai-assistant";
+import { getAIContext } from "@/lib/ai/data";
 export async function generateMetadata({
   params,
 }: {
@@ -27,9 +29,10 @@ export default async function ProfilePage({
   if (slug === "vsp-innovations") redirect("/");
   const p = await getProfile(slug);
   if (!p) notFound();
-  const [company, profiles] = await Promise.all([
+  const [company, profiles, ai] = await Promise.all([
     getCompany(p.company_id),
     getProfiles(),
+    getAIContext(p),
   ]);
   return (
     <main id="main" className="profile-main">
@@ -53,6 +56,13 @@ export default async function ProfilePage({
             </p>
             <h2>{p.headline}</h2>
           </div>
+          {ai.enabled && (
+            <AIAssistant
+              profile={p}
+              context={ai}
+              companyWebsite={company.website}
+            />
+          )}
           <ProfileActions profile={p} url={profileUrl(p.slug)} />
         </div>
       </Reveal>

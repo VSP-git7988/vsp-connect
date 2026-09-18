@@ -6,6 +6,13 @@ const schema = z.object({
   event_type: z.enum(eventTypes),
   referrer: z.string().max(2048).nullable().optional(),
   source: z.enum(["nfc", "qr", "direct"]).nullable().optional().catch(null),
+  solution: z
+    .string()
+    .max(60)
+    .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/)
+    .nullable()
+    .optional()
+    .catch(null),
 });
 export async function POST(req: Request) {
   const origin = req.headers.get("origin");
@@ -43,6 +50,7 @@ export async function POST(req: Request) {
     p_event_type: body.event_type,
     p_referrer: referrer,
     p_source: body.source ?? null,
+    p_solution_slug: body.solution ?? null,
   });
   return error
     ? Response.json({ recorded: false }, { status: 503 })
