@@ -558,7 +558,10 @@ footer {
   color: #b1adbc;
   font-size: 10px;
 }
-footer > a:last-child {
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 18px;
   color: #95909f;
 }
 .profile-main {
@@ -861,6 +864,88 @@ footer > a:last-child {
 .state-page p {
   color: var(--muted);
   margin: 18px 0;
+}
+.legal-main {
+  max-width: 720px;
+  margin: auto;
+  padding: 30px 0 70px;
+}
+.legal-heading {
+  padding-bottom: 30px;
+  border-bottom: 1px solid var(--line);
+}
+.legal-heading h1 {
+  font-size: clamp(28px, 3.4vw, 40px);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -1.4px;
+  margin: 20px 0 22px;
+}
+.legal-heading p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.85;
+}
+.legal-updated {
+  margin-top: 18px;
+  font-size: 10px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: #777582;
+}
+.legal-section {
+  margin-top: 38px;
+}
+.legal-section h2 {
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.4px;
+  margin-bottom: 14px;
+}
+.legal-section p {
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.85;
+}
+.legal-section p + p {
+  margin-top: 14px;
+}
+.legal-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 13px;
+}
+.legal-list li {
+  position: relative;
+  padding-left: 19px;
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.85;
+}
+.legal-list li:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 9px #8adbd633;
+}
+.legal-list strong {
+  font-weight: 400;
+  color: var(--text);
+}
+.legal-list + p {
+  margin-top: 16px;
+}
+.legal-link {
+  color: #c1abed;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 .login-main {
   min-height: 75vh;
@@ -1197,13 +1282,22 @@ th {
     gap: 16px;
     padding: 23px 0;
   }
-  footer > span {
+  footer > span:not(.footer-links) {
     order: 3;
     width: 100%;
     font-size: 8px;
   }
+  .footer-links {
+    gap: 14px;
+  }
   .profile-main {
     padding-top: 23px;
+  }
+  .legal-main {
+    padding: 23px 0 50px;
+  }
+  .legal-section {
+    margin-top: 32px;
   }
   .identity-banner {
     padding: 21px 18px;
@@ -1722,6 +1816,12 @@ th {
   font-size: 10px;
   line-height: 1.65;
   color: #7e808c;
+}
+.ai-privacy-link {
+  white-space: nowrap;
+  color: #a9a0c4;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 @media (max-width: 640px) {
   .ai-dialog {

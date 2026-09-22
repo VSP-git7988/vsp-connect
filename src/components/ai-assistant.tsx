@@ -400,7 +400,15 @@ export function AIAssistant({
           <p className="ai-privacy">
             Messages may be stored to improve follow-up and assist VSP
             Innovations with your request. Please don&rsquo;t share sensitive
-            information.
+            information.{" "}
+            <a
+              className="ai-privacy-link"
+              href="/privacy"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Privacy
+            </a>
           </p>
         </div>
       </dialog>

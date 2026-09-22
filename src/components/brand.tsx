@@ -39,9 +39,12 @@ export function Footer() {
         <Mark small /> VSP Innovations
       </Link>
       <span>Intelligent products. Human connections.</span>
-      <Link href="/admin">
-        Team access <span aria-hidden="true">↗</span>
-      </Link>
+      <span className="footer-links">
+        <Link href="/privacy">Privacy</Link>
+        <Link href="/admin">
+          Team access <span aria-hidden="true">↗</span>
+        </Link>
+      </span>
     </footer>
   );
 }
