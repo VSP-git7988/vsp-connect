@@ -1,4 +1,8 @@
 import type { NextConfig } from "next";
+const nextConfig: NextConfig = {
+  // ...your existing settings stay as they are
+  allowedDevOrigins: ["192.168.0.3"],
+};
 const config: NextConfig = {
   poweredByHeader: false,
   // Page-data collection runs one worker per core by default, which exhausts

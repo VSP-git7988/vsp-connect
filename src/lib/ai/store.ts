@@ -137,16 +137,23 @@ export async function saveTurn(
   const rows = [
     { role: "user" as const, content: userText },
     { role: "assistant" as const, content: assistantText },
-  ].filter((row) => row.content.trim().length > 0);
+    ].filter((row) => row.content.trim().length > 0);
   if (!rows.length) return;
+  // One statement shares a single now(), so the pair would tie on created_at
+  // and history could come back in either order. Stamp them explicitly.
+  const base = Date.now();
+  const stamped = rows.map((row, i) => ({
+    ...row,
+    created_at: new Date(base + i).toISOString(),
+  }));
   if (!serviceConfigured()) {
     memory.conversations.get(conversationId)?.messages.push(...rows);
     return;
   }
   const db = serviceDb();
-  await db
+    await db
     .from("messages")
-    .insert(rows.map((row) => ({ ...row, conversation_id: conversationId })));
+    .insert(stamped.map((row) => ({ ...row, conversation_id: conversationId })));
   // The column is a running total for the conversation, so it is derived from
   // the stored rows rather than overwritten with the size of this turn.
   const { count } = await db
