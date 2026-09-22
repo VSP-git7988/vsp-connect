@@ -138,3 +138,4 @@ Browser tests cover both founder routes, mobile/tablet/desktop overflow, contact
 V2 added the knowledge base, assistant and lead workflow on these UUIDs. Team ownership, NFC inventory, wallets and CRM integrations remain unbuilt and are not represented as working features. Extend with related tables, new numbered migrations and scoped RLS rather than placing profile content into one JSON blob. A second AI vendor is a new file in `src/lib/ai/providers/` implementing `AIProvider` plus one registry line.
 
 Build tooling: production builds use Next.js’s supported Webpack mode because Turbopack subprocess binding is restricted in this workspace. CommonJS PostCSS configuration avoids a Next.js ESM path-resolution issue with the literal `%20` in the workspace path. Local PostgreSQL tests use PGlite and a minimal Auth schema stub; they verify SQL permissions and aggregation, not the hosted Supabase Auth service.
+.
