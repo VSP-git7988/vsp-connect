@@ -8,6 +8,7 @@ import { Reveal } from "@/components/reveal";
 import { safeWebUrl } from "@/lib/contact";
 import { AIAssistant } from "@/components/ai-assistant";
 import { getAIContext } from "@/lib/ai/data";
+import { accentStyle } from "@/lib/accents";
 export async function generateMetadata({
   params,
 }: {
@@ -35,7 +36,7 @@ export default async function ProfilePage({
     getAIContext(p),
   ]);
   return (
-    <main id="main" className="profile-main">
+    <main id="main" className="profile-main" style={accentStyle(p)}>
       <Link href="/" className="back-link">
         <ArrowLeft size={15} /> Our people
       </Link>

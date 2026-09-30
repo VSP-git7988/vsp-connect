@@ -1,5 +1,5 @@
-"use client";
-import { motion, useReducedMotion } from "framer-motion";
+// CSS-driven entrance: the content is in the server HTML at full opacity once
+// the animation ends, so it never depends on JavaScript to become visible.
 export function Reveal({
   children,
   className = "",
@@ -7,15 +7,5 @@ export function Reveal({
   children: React.ReactNode;
   className?: string;
 }) {
-  const reduced = useReducedMotion();
-  return (
-    <motion.div
-      className={className}
-      initial={reduced ? false : { opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.55 }}
-    >
-      {children}
-    </motion.div>
-  );
+  return <div className={`reveal ${className}`}>{children}</div>;
 }

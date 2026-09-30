@@ -2,8 +2,9 @@ import Link from "next/link";
 import { ArrowUpRight, Cpu, Layers3, Sparkles, ScanLine } from "lucide-react";
 import { getProfiles } from "@/lib/data";
 import { Avatar } from "@/components/avatar";
-import { Mark } from "@/components/brand";
+import { HeroCardStack } from "@/components/hero-card-stack";
 import { Reveal } from "@/components/reveal";
+import { accentStyle } from "@/lib/accents";
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
@@ -33,25 +34,7 @@ export default async function Home() {
           </div>
         </Reveal>
         <Reveal className="hero-art">
-          <div className="orbit orbit-one" />
-          <div className="orbit orbit-two" />
-          <div className="floating-card">
-            <div className="card-top">
-              <Mark />
-              <span>VSP INNOVATIONS</span>
-              <ScanLine size={22} />
-            </div>
-            <div className="card-symbol">
-              vsp<span>✳</span>
-            </div>
-            <div className="card-bottom">
-              <div>
-                Ideas into intelligence.
-                <small>AI SOLUTIONS & PRODUCT DEVELOPMENT</small>
-              </div>
-              <span className="contactless">)))</span>
-            </div>
-          </div>
+          <HeroCardStack profiles={profiles} />
           <div className="art-caption">
             <span className="status-dot" /> ONE CONNECTION. ENDLESS
             POSSIBILITIES.
@@ -78,6 +61,7 @@ export default async function Home() {
               key={p.id}
               href={`/${p.slug}`}
               className={`founder-card founder-${i % 2}`}
+              style={accentStyle(p)}
             >
               <div className="founder-top">
                 <Avatar profile={p} />
@@ -94,8 +78,8 @@ export default async function Home() {
                 <span>
                   <span className="status-dot" /> Let’s connect
                 </span>
-                <span>
-                  View profile <ArrowUpRight size={14} />
+                <span className="view-profile">
+                  View profile <ArrowUpRight size={15} />
                 </span>
               </div>
             </Link>

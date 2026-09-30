@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Header, Footer } from "@/components/brand";
+import { Aurora } from "@/components/aurora";
 export const metadata: Metadata = {
   title: {
     default: "VSP Connect — Intelligent products. Human connections.",
@@ -20,6 +21,7 @@ export default function RootLayout({
         <a className="skip-link" href="#main">
           Skip to content
         </a>
+        <Aurora />
         <div className="site-shell">
           <Header />
           {children}

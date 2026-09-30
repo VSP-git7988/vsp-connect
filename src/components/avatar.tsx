@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { Profile } from "@/lib/types";
+import { accentStyle } from "@/lib/accents";
 export function Avatar({
   profile,
   large = false,
@@ -9,7 +10,8 @@ export function Avatar({
 }) {
   return (
     <div
-      className={`avatar ${large ? "avatar-large" : ""} ${profile.slug === "kavya-kelam" ? "violet" : ""}`}
+      className={`avatar ${large ? "avatar-large" : ""}`}
+      style={accentStyle(profile)}
     >
       {profile.profile_image ? (
         <Image

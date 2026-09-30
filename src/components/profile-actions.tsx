@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import {
   Download,
@@ -18,6 +17,8 @@ import {
 import type { Profile } from "@/lib/types";
 import { contactUrls } from "@/lib/contact";
 import { track } from "@/lib/analytics-client";
+import { ProfileQr } from "@/components/profile-qr";
+import { CHANNEL_COLORS } from "@/lib/accents";
 export { track };
 export function ProfileActions({
   profile: p,
@@ -111,6 +112,7 @@ export function ProfileActions({
             <a
               key={label}
               href={href}
+              style={{ "--tile": CHANNEL_COLORS[label] } as React.CSSProperties}
               target={href.startsWith("http") ? "_blank" : undefined}
               rel="noopener noreferrer"
               onClick={() => track(p.id, event)}
@@ -178,13 +180,7 @@ export function ProfileActions({
         <div className="eyebrow">LET’S STAY CONNECTED</div>
         <h2>{p.display_name}</h2>
         <p>Scan to open my digital profile.</p>
-        <Image
-          unoptimized
-          src={`/api/profiles/${p.slug}/qr`}
-          alt={`QR code linking to ${p.display_name}'s profile`}
-          width="256"
-          height="256"
-        />
+        <ProfileQr profile={p} />
         <p className="qr-url">{url}</p>
         <a
           className="button primary"
