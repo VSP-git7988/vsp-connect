@@ -137,7 +137,7 @@ export async function saveTurn(
   const rows = [
     { role: "user" as const, content: userText },
     { role: "assistant" as const, content: assistantText },
-    ].filter((row) => row.content.trim().length > 0);
+  ].filter((row) => row.content.trim().length > 0);
   if (!rows.length) return;
   // One statement shares a single now(), so the pair would tie on created_at
   // and history could come back in either order. Stamp them explicitly.
@@ -151,9 +151,11 @@ export async function saveTurn(
     return;
   }
   const db = serviceDb();
-    await db
+  await db
     .from("messages")
-    .insert(stamped.map((row) => ({ ...row, conversation_id: conversationId })));
+    .insert(
+      stamped.map((row) => ({ ...row, conversation_id: conversationId })),
+    );
   // The column is a running total for the conversation, so it is derived from
   // the stored rows rather than overwritten with the size of this turn.
   const { count } = await db

@@ -2,11 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { configured, publicDb } from "../supabase";
 import type { Profile } from "../types";
-import {
-  seedCompanyQuestions,
-  seedIntro,
-  seedSolutions,
-} from "./seed";
+import { seedCompanyQuestions, seedIntro, seedSolutions } from "./seed";
 import type { AIProfileContext, AISolution } from "./types";
 
 /**
@@ -22,10 +18,7 @@ export const getAIContext = cache(
         slug: profile.slug,
         displayName: profile.display_name,
         intro: seedIntro(firstName),
-        suggestions: [
-          ...seedCompanyQuestions,
-          `Tell me about ${firstName}.`,
-        ],
+        suggestions: [...seedCompanyQuestions, `Tell me about ${firstName}.`],
         solutions: seedSolutions,
         enabled: true,
       };

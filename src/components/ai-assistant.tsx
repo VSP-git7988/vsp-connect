@@ -17,6 +17,7 @@ import type { Profile } from "@/lib/types";
 import type { AIAction, AIProfileContext, AISolution } from "@/lib/ai/types";
 import { ControlFilter, parseControl } from "@/lib/ai/actions";
 import { contactUrls, safeWebUrl } from "@/lib/contact";
+import { profileApiPath } from "@/lib/regions";
 import { track } from "@/lib/analytics-client";
 import { AIMessageText } from "./ai-message";
 
@@ -70,10 +71,12 @@ function mergeActions(lists: AIAction[][]): AIAction[] {
 export function AIAssistant({
   profile,
   context,
+  companyName,
   companyWebsite,
 }: {
   profile: Profile;
   context: AIProfileContext;
+  companyName: string;
   companyWebsite: string | null;
 }) {
   const [open, setOpen] = useState(false);
@@ -249,7 +252,7 @@ export function AIAssistant({
             <div className="ai-head-text">
               <strong>{profile.first_name}&rsquo;s AI representative</strong>
               <span>
-                <span className="status-dot" /> VSP Innovations
+                <span className="status-dot" /> {companyName}
               </span>
             </div>
             <button
@@ -280,7 +283,7 @@ export function AIAssistant({
               <p>{context.intro}</p>
               <small>
                 Answers come from {profile.first_name}&rsquo;s approved profile
-                and VSP Innovations business information.
+                and {companyName} business information.
               </small>
             </div>
             {bubbles.map((bubble) => (
@@ -333,7 +336,11 @@ export function AIAssistant({
                     </a>
                   )}
                   <a
-                    href={`/api/profiles/${profile.slug}/vcard`}
+                    href={profileApiPath(
+                      profile.slug,
+                      "vcard",
+                      profile.region_code,
+                    )}
                     onClick={() => track(profile.id, "save_contact")}
                   >
                     <Download size={14} /> Save contact
@@ -398,9 +405,8 @@ export function AIAssistant({
             </button>
           </form>
           <p className="ai-privacy">
-            Messages may be stored to improve follow-up and assist VSP
-            Innovations with your request. Please don&rsquo;t share sensitive
-            information.{" "}
+            Messages may be stored to improve follow-up and assist {companyName}{" "}
+            with your request. Please don&rsquo;t share sensitive information.{" "}
             <a
               className="ai-privacy-link"
               href="/privacy"
@@ -469,7 +475,7 @@ function ActionRow({
             <a
               key={key}
               className="ai-action"
-              href={`/api/profiles/${profile.slug}/vcard`}
+              href={profileApiPath(profile.slug, "vcard", profile.region_code)}
               onClick={() => track(profile.id, "save_contact")}
             >
               <Download size={15} /> Save contact

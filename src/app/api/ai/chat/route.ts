@@ -56,7 +56,7 @@ function fail(code: ChatErrorCode, status: number, message: string) {
 
 export async function POST(req: Request) {
   const origin = req.headers.get("origin");
-    const host = req.headers.get("x-forwarded-host") ?? req.headers.get("host");
+  const host = req.headers.get("x-forwarded-host") ?? req.headers.get("host");
   if (origin && (!host || new URL(origin).host !== host))
     return fail("invalid", 403, "Invalid origin.");
   if (Number(req.headers.get("content-length")) > MAX_BODY_BYTES)

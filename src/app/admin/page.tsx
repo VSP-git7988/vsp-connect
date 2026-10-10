@@ -104,7 +104,9 @@ export default async function Overview() {
                   <td>{sum("ai_opened", row.profile_id)}</td>
                   <td>{rate(sum("ai_opened", row.profile_id), seen)}</td>
                   <td>{Number(aiFor(row.profile_id)?.conversations ?? 0)}</td>
-                  <td>{Number(aiFor(row.profile_id)?.visitor_messages ?? 0)}</td>
+                  <td>
+                    {Number(aiFor(row.profile_id)?.visitor_messages ?? 0)}
+                  </td>
                   <td>{Number(aiFor(row.profile_id)?.leads ?? 0)}</td>
                   <td>{sum("meeting_intent", row.profile_id)}</td>
                   <td>

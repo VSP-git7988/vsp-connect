@@ -56,20 +56,20 @@ export const seedSolutions: AISolution[] = [
 
 const companyKnowledge: KnowledgeEntry[] = [
   {
-    title: "What VSP Innovations is",
-    content: `VSP Innovations is an AI Solutions and Product Development company. ${company.description} The two co-founders are Arjun Devireddy and Kavya Kelam.`,
+    title: `What ${company.name} is`,
+    content: `${company.name} is an AI Solutions and Product Development company. ${company.description} The two co-founders are Arjun Devireddy and Kavya Kelam.`,
     category: "company",
     scope: "company",
   },
   {
-    title: "How VSP Innovations works with clients",
+    title: `How ${company.name} works with clients`,
     content:
       "Engagements start with a conversation about the problem before any solution is proposed. Scope, timelines and commercials are agreed per project. The fastest way to start is a short call with one of the co-founders.",
     category: "company",
     scope: "company",
   },
   {
-    title: "What VSP Innovations builds",
+    title: `What ${company.name} builds`,
     content: `Capability areas are ${seedSolutions
       .map((s) => s.name)
       .join(", ")}. Each is scoped to the client's own systems and data.`,
@@ -85,8 +85,7 @@ const companyKnowledge: KnowledgeEntry[] = [
   },
   {
     title: "Pricing",
-    content:
-      "VSP Innovations does not publish standard prices or packages. Cost depends on scope, integrations and support requirements, and is quoted after an initial conversation. No pricing figures, ranges or estimates are available through this assistant.",
+    content: `${company.name} does not publish standard prices or packages. Cost depends on scope, integrations and support requirements, and is quoted after an initial conversation. No pricing figures, ranges or estimates are available through this assistant.`,
     category: "policy",
     scope: "company",
   },
@@ -105,16 +104,14 @@ const companyKnowledge: KnowledgeEntry[] = [
     scope: "company",
   },
   {
-    title: "How to reach VSP Innovations",
-    content:
-      "The way to reach VSP Innovations is through a founder profile: save the contact card, use the contact actions shown on the profile, or book a meeting with the founder whose profile you are viewing. Contact details shown on a profile are the authoritative ones; this assistant does not hold any others.",
+    title: `How to reach ${company.name}`,
+    content: `The way to reach ${company.name} is through a founder profile: save the contact card, use the contact actions shown on the profile, or book a meeting with the founder whose profile you are viewing. Contact details shown on a profile are the authoritative ones; this assistant does not hold any others.`,
     category: "contact",
     scope: "company",
   },
   {
     title: "Data handling in this conversation",
-    content:
-      "Messages in this assistant may be stored so VSP Innovations can follow up on a request and understand what visitors ask. Contact details are stored only when a visitor provides them. No other personal data is collected.",
+    content: `Messages in this assistant may be stored so ${company.name} can follow up on a request and understand what visitors ask. Contact details are stored only when a visitor provides them. No other personal data is collected.`,
     category: "policy",
     scope: "company",
   },
@@ -151,7 +148,7 @@ export const seedKnowledge: KnowledgeEntry[] = [
 ];
 
 export const seedCompanyQuestions = [
-  "What does VSP Innovations build?",
+  `What does ${company.name} build?`,
   "How can AI help my business?",
   "What AI solutions do you offer?",
   "Can you build an AI voice agent?",
@@ -160,7 +157,7 @@ export const seedCompanyQuestions = [
 ];
 
 export function seedIntro(firstName: string) {
-  return `Hi, I'm ${firstName}'s AI representative. Ask me about VSP Innovations, what we build, or how AI could fit your business.`;
+  return `Hi, I'm ${firstName}'s AI representative. Ask me about ${company.name}, what we build, or how AI could fit your business.`;
 }
 
 export function seedPersona(displayName: string, title: string) {

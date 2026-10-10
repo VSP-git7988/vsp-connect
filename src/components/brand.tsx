@@ -1,4 +1,8 @@
 import Link from "next/link";
+import { connection } from "next/server";
+import { getCompany } from "@/lib/data";
+import { company as fallbackCompany } from "@/lib/seed";
+import { HomeLink } from "@/components/home-link";
 export function Mark({ small = false }: { small?: boolean }) {
   return (
     <span aria-hidden="true" className={`brand-mark ${small ? "small" : ""}`}>
@@ -26,17 +30,22 @@ export function Header() {
       <div className="header-note">
         <span className="status-dot" /> Designed for connection
       </div>
-      <Link className="header-link" href="/">
+      <HomeLink className="header-link">
         Our people <span>↗</span>
-      </Link>
+      </HomeLink>
     </header>
   );
 }
-export function Footer() {
+// Rendered by the root layout, so a failed company lookup falls back to the
+// seed name rather than taking down every page. connection() renders it per
+// request, so a rename shows without a rebuild.
+export async function Footer() {
+  await connection();
+  const company = await getCompany().catch(() => fallbackCompany);
   return (
     <footer>
       <Link href="/" className="footer-brand">
-        <Mark small /> VSP Innovations
+        <Mark small /> {company.name}
       </Link>
       <span>Intelligent products. Human connections.</span>
       <span className="footer-links">

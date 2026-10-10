@@ -5,11 +5,7 @@ import type { EventType } from "./types";
  * never affects the interaction the visitor was making. `solution` is only
  * included when present so the payload stays minimal.
  */
-export function track(
-  profileId: string,
-  event: EventType,
-  solution?: string,
-) {
+export function track(profileId: string, event: EventType, solution?: string) {
   void fetch("/api/events", {
     method: "POST",
     headers: { "Content-Type": "application/json" },

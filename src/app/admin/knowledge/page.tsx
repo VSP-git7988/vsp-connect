@@ -1,5 +1,12 @@
 import { requireAdmin } from "@/lib/admin";
-import { Card, Choice, Empty, Field, TextArea, Toggle } from "@/components/admin-ui";
+import {
+  Card,
+  Choice,
+  Empty,
+  Field,
+  TextArea,
+  Toggle,
+} from "@/components/admin-ui";
 import { deleteKnowledge, saveKnowledge } from "../actions";
 
 export const dynamic = "force-dynamic";
@@ -39,14 +46,19 @@ export default async function Knowledge() {
   if (entries.error || profiles.error || companies.error)
     throw new Error("Knowledge could not be loaded.");
   const rows = (entries.data || []) as Row[];
-  const people = (profiles.data || []) as { id: string; display_name: string }[];
+  const people = (profiles.data || []) as {
+    id: string;
+    display_name: string;
+  }[];
   const company = ((companies.data || []) as { id: string; name: string }[])[0];
   const scopes: [string, string][] = [
     ["", "Company-wide (both founders)"],
     ...people.map((p) => [p.id, `${p.display_name} only`] as [string, string]),
   ];
   const scopeName = (id: string | null) =>
-    id ? (people.find((p) => p.id === id)?.display_name ?? "Founder") : "Company";
+    id
+      ? (people.find((p) => p.id === id)?.display_name ?? "Founder")
+      : "Company";
 
   return (
     <>
@@ -64,7 +76,12 @@ export default async function Knowledge() {
             <input type="hidden" name="company_id" value={company.id} />
             <Field label="Title" name="title" required />
             <div className="admin-grid">
-              <Choice label="Category" name="category" options={categories} defaultValue="company" />
+              <Choice
+                label="Category"
+                name="category"
+                options={categories}
+                defaultValue="company"
+              />
               <Choice label="Applies to" name="profile_id" options={scopes} />
             </div>
             <TextArea label="Content" name="content" rows={5} required />
@@ -84,12 +101,33 @@ export default async function Knowledge() {
           <form action={saveKnowledge} className="admin-form">
             <input type="hidden" name="id" value={row.id} />
             <input type="hidden" name="company_id" value={row.company_id} />
-            <Field label="Title" name="title" defaultValue={row.title} required />
+            <Field
+              label="Title"
+              name="title"
+              defaultValue={row.title}
+              required
+            />
             <div className="admin-grid">
-              <Choice label="Category" name="category" options={categories} defaultValue={row.category} />
-              <Choice label="Applies to" name="profile_id" options={scopes} defaultValue={row.profile_id ?? ""} />
+              <Choice
+                label="Category"
+                name="category"
+                options={categories}
+                defaultValue={row.category}
+              />
+              <Choice
+                label="Applies to"
+                name="profile_id"
+                options={scopes}
+                defaultValue={row.profile_id ?? ""}
+              />
             </div>
-            <TextArea label="Content" name="content" rows={5} defaultValue={row.content} required />
+            <TextArea
+              label="Content"
+              name="content"
+              rows={5}
+              defaultValue={row.content}
+              required
+            />
             <Toggle label="Active" name="active" defaultChecked={row.active} />
             <div className="admin-buttons">
               <button className="button primary">Save</button>

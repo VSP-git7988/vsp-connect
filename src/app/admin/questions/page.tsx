@@ -26,7 +26,10 @@ export default async function Questions() {
   if (questions.error || profiles.error || companies.error)
     throw new Error("Suggested questions could not be loaded.");
   const rows = (questions.data || []) as Row[];
-  const people = (profiles.data || []) as { id: string; display_name: string }[];
+  const people = (profiles.data || []) as {
+    id: string;
+    display_name: string;
+  }[];
   const company = ((companies.data || []) as { id: string; name: string }[])[0];
   const scopes: [string, string][] = [
     ["", "Every founder profile"],
@@ -51,7 +54,12 @@ export default async function Questions() {
             <Field label="Question" name="question" required />
             <div className="admin-grid">
               <Choice label="Shown on" name="profile_id" options={scopes} />
-              <Field label="Sort order" name="sort_order" type="number" defaultValue="0" />
+              <Field
+                label="Sort order"
+                name="sort_order"
+                type="number"
+                defaultValue="0"
+              />
             </div>
             <Toggle label="Active" name="active" defaultChecked />
             <div className="admin-buttons">
@@ -69,10 +77,25 @@ export default async function Questions() {
           <form action={saveQuestion} className="admin-form">
             <input type="hidden" name="id" value={row.id} />
             <input type="hidden" name="company_id" value={row.company_id} />
-            <Field label="Question" name="question" defaultValue={row.question} required />
+            <Field
+              label="Question"
+              name="question"
+              defaultValue={row.question}
+              required
+            />
             <div className="admin-grid">
-              <Choice label="Shown on" name="profile_id" options={scopes} defaultValue={row.profile_id ?? ""} />
-              <Field label="Sort order" name="sort_order" type="number" defaultValue={String(row.sort_order)} />
+              <Choice
+                label="Shown on"
+                name="profile_id"
+                options={scopes}
+                defaultValue={row.profile_id ?? ""}
+              />
+              <Field
+                label="Sort order"
+                name="sort_order"
+                type="number"
+                defaultValue={String(row.sort_order)}
+              />
             </div>
             <Toggle label="Active" name="active" defaultChecked={row.active} />
             <div className="admin-buttons">

@@ -4,7 +4,12 @@ import { saveAIConfig } from "../actions";
 
 export const dynamic = "force-dynamic";
 
-type Profile = { id: string; display_name: string; slug: string; title: string };
+type Profile = {
+  id: string;
+  display_name: string;
+  slug: string;
+  title: string;
+};
 type Config = {
   profile_id: string;
   enabled: boolean;
@@ -16,7 +21,10 @@ type Config = {
 export default async function AIIdentity() {
   const { db } = await requireAdmin();
   const [profiles, configs] = await Promise.all([
-    db.from("profiles").select("id,display_name,slug,title").order("display_name"),
+    db
+      .from("profiles")
+      .select("id,display_name,slug,title")
+      .order("display_name"),
     db
       .from("profile_ai_config")
       .select("profile_id,enabled,intro,persona_instructions,focus_areas"),

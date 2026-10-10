@@ -47,17 +47,60 @@ export default async function Profiles() {
         >
           <form action={saveProfile} className="admin-form">
             <input type="hidden" name="id" value={row.id} />
-            <Field label="Headline" name="headline" defaultValue={row.headline} />
-            <TextArea label="Biography" name="bio" defaultValue={row.bio} rows={4} />
+            <Field
+              label="Headline"
+              name="headline"
+              defaultValue={row.headline}
+            />
+            <TextArea
+              label="Biography"
+              name="bio"
+              defaultValue={row.bio}
+              rows={4}
+            />
             <div className="admin-grid">
-              <Field label="Phone" name="phone" defaultValue={row.phone} hint="International format" />
-              <Field label="Email" name="email" type="email" defaultValue={row.email} />
-              <Field label="WhatsApp" name="whatsapp" defaultValue={row.whatsapp} hint="International digits" />
-              <Field label="LinkedIn URL" name="linkedin_url" defaultValue={row.linkedin_url} hint="https://" />
-              <Field label="Website URL" name="website_url" defaultValue={row.website_url} hint="https://" />
-              <Field label="Booking URL" name="booking_url" defaultValue={row.booking_url} hint="https://cal.com/…" />
+              <Field
+                label="Phone"
+                name="phone"
+                defaultValue={row.phone}
+                hint="International format"
+              />
+              <Field
+                label="Email"
+                name="email"
+                type="email"
+                defaultValue={row.email}
+              />
+              <Field
+                label="WhatsApp"
+                name="whatsapp"
+                defaultValue={row.whatsapp}
+                hint="International digits"
+              />
+              <Field
+                label="LinkedIn URL"
+                name="linkedin_url"
+                defaultValue={row.linkedin_url}
+                hint="https://"
+              />
+              <Field
+                label="Website URL"
+                name="website_url"
+                defaultValue={row.website_url}
+                hint="https://"
+              />
+              <Field
+                label="Booking URL"
+                name="booking_url"
+                defaultValue={row.booking_url}
+                hint="https://cal.com/…"
+              />
             </div>
-            <Toggle label="Publicly visible" name="active" defaultChecked={row.active} />
+            <Toggle
+              label="Publicly visible"
+              name="active"
+              defaultChecked={row.active}
+            />
             <div className="admin-buttons">
               <button className="button primary">Save profile</button>
             </div>

@@ -63,7 +63,10 @@ export async function saveKnowledge(form: FormData) {
   };
   const id = get("id");
   const { error } = id
-    ? await client.from("knowledge_sources").update(row).eq("id", uuid.parse(id))
+    ? await client
+        .from("knowledge_sources")
+        .update(row)
+        .eq("id", uuid.parse(id))
     : await client.from("knowledge_sources").insert(row);
   if (error) throw new Error("Knowledge entry could not be saved.");
   refresh("/admin/knowledge");
@@ -91,14 +94,28 @@ export async function saveSolution(form: FormData) {
       .max(60)
       .parse(get("slug")),
     name: required(120).parse(get("name")),
-    short_description: z.string().trim().max(400).parse(get("short_description")),
-    full_description: z.string().trim().max(4000).parse(get("full_description")),
+    short_description: z
+      .string()
+      .trim()
+      .max(400)
+      .parse(get("short_description")),
+    full_description: z
+      .string()
+      .trim()
+      .max(4000)
+      .parse(get("full_description")),
     target_industries: get("target_industries")
       .split(",")
       .map((value) => value.trim())
       .filter(Boolean)
       .slice(0, 20),
-    sort_order: z.coerce.number().int().min(0).max(999).catch(0).parse(get("sort_order")),
+    sort_order: z.coerce
+      .number()
+      .int()
+      .min(0)
+      .max(999)
+      .catch(0)
+      .parse(get("sort_order")),
     active: checkbox(form.get("active")),
   };
   const id = get("id");
@@ -126,12 +143,21 @@ export async function saveQuestion(form: FormData) {
     company_id: uuid.parse(get("company_id")),
     profile_id: optionalUuid.parse(get("profile_id")),
     question: required(160).parse(get("question")),
-    sort_order: z.coerce.number().int().min(0).max(999).catch(0).parse(get("sort_order")),
+    sort_order: z.coerce
+      .number()
+      .int()
+      .min(0)
+      .max(999)
+      .catch(0)
+      .parse(get("sort_order")),
     active: checkbox(form.get("active")),
   };
   const id = get("id");
   const { error } = id
-    ? await client.from("suggested_questions").update(row).eq("id", uuid.parse(id))
+    ? await client
+        .from("suggested_questions")
+        .update(row)
+        .eq("id", uuid.parse(id))
     : await client.from("suggested_questions").insert(row);
   if (error) throw new Error("Suggested question could not be saved.");
   refresh("/admin/questions");

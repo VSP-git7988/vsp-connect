@@ -1,13 +1,15 @@
 import QRCode from "qrcode";
-import { getProfile, profileUrl } from "@/lib/data";
+import { getRegionProfile, requestRegion } from "@/lib/data";
+import { regionUrl } from "@/lib/regions";
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ slug: string }> },
 ) {
   const { slug } = await params;
-  if (!(await getProfile(slug)))
+  const region = await requestRegion(req);
+  if (!region || !(await getRegionProfile(slug, region.code)))
     return new Response("Not found", { status: 404 });
-  const svg = await QRCode.toString(profileUrl(slug), {
+  const svg = await QRCode.toString(regionUrl(region.code, slug), {
     type: "svg",
     margin: 4,
     errorCorrectionLevel: "M",

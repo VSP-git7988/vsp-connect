@@ -24,6 +24,8 @@ export type Profile = {
   website_url: string | null;
   booking_url: string | null;
   active: boolean;
+  // Set when the profile was loaded for a region, with that region's overrides.
+  region_code?: string;
   expertise: { name: string; sort_order: number }[];
   social_links: {
     platform: string;
@@ -31,6 +33,14 @@ export type Profile = {
     url: string;
     sort_order: number;
   }[];
+};
+export type Region = {
+  code: string;
+  name: string;
+  // BCP 47 tag used for hreflang alternates, e.g. en-IN.
+  locale: string;
+  default_region: boolean;
+  active: boolean;
 };
 export const eventTypes = [
   "profile_view",

@@ -997,8 +997,7 @@ footer a:focus-visible {
       color-mix(in srgb, var(--accent) 17%, transparent),
       transparent 65%
     ),
-    linear-gradient(110deg, #233943aa, #39304799, #1d273299),
-    #101218;
+    linear-gradient(110deg, #233943aa, #39304799, #1d273299), #101218;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -2722,4 +2721,28 @@ th {
 }
 .admin-turn-assistant {
   background: #b6a5f50a;
+}
+/* One founder (data-single): the founder card stands alone, centred in the
+   stage and scaled up to hold the space. scale composes with the drift
+   animation's transform and the card's own tilt. */
+.hero-stage[data-single] {
+  display: grid;
+  place-content: center;
+}
+.hero-stage[data-single] .hero-slot {
+  grid-area: 1 / 1;
+  position: relative;
+  inset: auto;
+  scale: 1.15;
+}
+/* On mobile the card already spans the gutters, so it keeps full width (the
+   deck rules hold scale at 1); it drops the room kept for a back card and
+   sits evenly in the stage. */
+@media (max-width: 767.98px) {
+  .hero-stage[data-single] {
+    padding-block: 32px;
+  }
+  .hero-stage[data-single] .hero-slot {
+    margin-top: 0;
+  }
 }

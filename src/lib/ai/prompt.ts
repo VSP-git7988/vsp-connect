@@ -19,7 +19,8 @@ export function availableActions(profile: Profile, company: Company) {
   if (links.booking) actions.push("BOOK_MEETING");
   if (links.whatsapp) actions.push("OPEN_WHATSAPP");
   if (links.email) actions.push("OPEN_EMAIL");
-  if (links.website || safeWebUrl(company.website)) actions.push("OPEN_WEBSITE");
+  if (links.website || safeWebUrl(company.website))
+    actions.push("OPEN_WEBSITE");
   actions.push("SHOW_SOLUTION");
   return actions;
 }
@@ -69,7 +70,9 @@ export function buildSystemPrompt({
 
   const solutionBlock = solutions.length
     ? solutions
-        .map((s) => `- ${s.slug} = ${s.name}: ${neutralise(s.short_description)}`)
+        .map(
+          (s) => `- ${s.slug} = ${s.name}: ${neutralise(s.short_description)}`,
+        )
         .join("\n")
     : "(No solutions are configured.)";
 

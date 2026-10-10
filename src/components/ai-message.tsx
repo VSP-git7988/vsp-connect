@@ -33,7 +33,12 @@ function inline(text: string, keyPrefix: string): ReactNode[] {
     if (/^https?:\/\//.test(part)) {
       const href = safeHref(part);
       return href ? (
-        <a key={key} href={href} target="_blank" rel="noopener noreferrer nofollow">
+        <a
+          key={key}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
           {part}
         </a>
       ) : (
@@ -56,7 +61,10 @@ export function AIMessageText({ text }: { text: string }) {
         if (bullets || numbered) {
           const items = lines.map((line, i) => (
             <li key={i}>
-              {inline(line.replace(/^\s*(?:[-*]|\d+[.)])\s+/, ""), `${blockIndex}-${i}`)}
+              {inline(
+                line.replace(/^\s*(?:[-*]|\d+[.)])\s+/, ""),
+                `${blockIndex}-${i}`,
+              )}
             </li>
           ));
           return numbered ? (

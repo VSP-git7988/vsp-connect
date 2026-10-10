@@ -5,6 +5,7 @@ import { Mark } from "@/components/brand";
 import { ProfileQr } from "@/components/profile-qr";
 import { DEFAULT_ACCENT, profileAccent } from "@/lib/accents";
 import { HeroDeck } from "@/components/hero-deck";
+import { regionPath } from "@/lib/regions";
 type CSSVars = React.CSSProperties & Record<`--${string}`, string>;
 // x%, y%, size px, twinkle duration s, delay s
 const SPARKLES = [
@@ -47,10 +48,12 @@ const SLOTS: Record<"back" | "front" | "company", CSSVars> = {
 };
 function FounderCard({
   profile: p,
+  companyName,
   slot,
   deck,
 }: {
   profile: Profile;
+  companyName: string;
   slot: "back" | "front";
   deck: number;
 }) {
@@ -60,7 +63,7 @@ function FounderCard({
       data-deck={deck}
       style={{ ...SLOTS[slot], "--accent": profileAccent(p) } as CSSVars}
     >
-      <Link href={`/${p.slug}`} className="hero-card">
+      <Link href={regionPath(p.region_code, p.slug)} className="hero-card">
         <span className="hero-card-top">
           <span aria-hidden="true" className="hero-monogram">
             {p.first_name[0]}
@@ -69,7 +72,9 @@ function FounderCard({
           <ProfileQr profile={p} size={96} className="hero-card-qr" />
         </span>
         <span className="hero-card-name">{p.display_name}</span>
-        <span className="hero-card-role">{p.title}, VSP Innovations</span>
+        <span className="hero-card-role">
+          {p.title}, {companyName}
+        </span>
         <span className="hero-card-cta">
           <ScanLine size={15} aria-hidden="true" /> Scan or tap to open
         </span>
@@ -77,7 +82,13 @@ function FounderCard({
     </div>
   );
 }
-export function HeroCardStack({ profiles }: { profiles: Profile[] }) {
+export function HeroCardStack({
+  profiles,
+  companyName,
+}: {
+  profiles: Profile[];
+  companyName: string;
+}) {
   const back =
     profiles.find((p) => p.slug === "kavya-kelam") ?? profiles[1] ?? null;
   const front = profiles.find((p) => p !== back) ?? null;
@@ -123,24 +134,28 @@ export function HeroCardStack({ profiles }: { profiles: Profile[] }) {
           <path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" />
         </svg>
       ))}
-      <div
-        className="hero-slot hero-slot-company"
-        style={SLOTS.company}
-        aria-hidden="true"
-      >
-        <div className="hero-card hero-card-company">
-          <span className="hero-card-top">
-            <Mark />
-            <span className="contactless">)))</span>
-          </span>
-          <span className="hero-card-name">VSP Innovations</span>
-          <span className="hero-card-role">Ideas into intelligence.</span>
+      {/* A lone founder's card stands alone; the company card only backs a pair. */}
+      {founders.length > 1 && (
+        <div
+          className="hero-slot hero-slot-company"
+          style={SLOTS.company}
+          aria-hidden="true"
+        >
+          <div className="hero-card hero-card-company">
+            <span className="hero-card-top">
+              <Mark />
+              <span className="contactless">)))</span>
+            </span>
+            <span className="hero-card-name">{companyName}</span>
+            <span className="hero-card-role">Ideas into intelligence.</span>
+          </div>
         </div>
-      </div>
+      )}
       {founders.map((p, i) => (
         <FounderCard
           key={p.id}
           profile={p}
+          companyName={companyName}
           slot={p === front ? "front" : "back"}
           deck={i}
         />

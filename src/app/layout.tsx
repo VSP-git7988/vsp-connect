@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     template: "%s | VSP Connect",
   },
   description:
-    "Meet the people building AI solutions and intelligent products at VSP Innovations.",
+    "Meet the people building AI solutions and intelligent products at VSP Innovations Pvt Ltd.",
 };
 export default function RootLayout({
   children,

@@ -46,13 +46,31 @@ export default async function Solutions() {
             <input type="hidden" name="company_id" value={company.id} />
             <div className="admin-grid">
               <Field label="Name" name="name" required />
-              <Field label="Identifier" name="slug" required hint="lower-case-with-hyphens" />
+              <Field
+                label="Identifier"
+                name="slug"
+                required
+                hint="lower-case-with-hyphens"
+              />
             </div>
             <Field label="Short description" name="short_description" />
-            <TextArea label="Full description" name="full_description" rows={4} />
+            <TextArea
+              label="Full description"
+              name="full_description"
+              rows={4}
+            />
             <div className="admin-grid">
-              <Field label="Target industries" name="target_industries" hint="Comma separated" />
-              <Field label="Sort order" name="sort_order" defaultValue="0" type="number" />
+              <Field
+                label="Target industries"
+                name="target_industries"
+                hint="Comma separated"
+              />
+              <Field
+                label="Sort order"
+                name="sort_order"
+                defaultValue="0"
+                type="number"
+              />
             </div>
             <Toggle label="Active" name="active" defaultChecked />
             <div className="admin-buttons">
@@ -71,11 +89,30 @@ export default async function Solutions() {
             <input type="hidden" name="id" value={row.id} />
             <input type="hidden" name="company_id" value={row.company_id} />
             <div className="admin-grid">
-              <Field label="Name" name="name" defaultValue={row.name} required />
-              <Field label="Identifier" name="slug" defaultValue={row.slug} required />
+              <Field
+                label="Name"
+                name="name"
+                defaultValue={row.name}
+                required
+              />
+              <Field
+                label="Identifier"
+                name="slug"
+                defaultValue={row.slug}
+                required
+              />
             </div>
-            <Field label="Short description" name="short_description" defaultValue={row.short_description} />
-            <TextArea label="Full description" name="full_description" rows={4} defaultValue={row.full_description} />
+            <Field
+              label="Short description"
+              name="short_description"
+              defaultValue={row.short_description}
+            />
+            <TextArea
+              label="Full description"
+              name="full_description"
+              rows={4}
+              defaultValue={row.full_description}
+            />
             <div className="admin-grid">
               <Field
                 label="Target industries"
@@ -83,7 +120,12 @@ export default async function Solutions() {
                 defaultValue={(row.target_industries ?? []).join(", ")}
                 hint="Comma separated"
               />
-              <Field label="Sort order" name="sort_order" type="number" defaultValue={String(row.sort_order)} />
+              <Field
+                label="Sort order"
+                name="sort_order"
+                type="number"
+                defaultValue={String(row.sort_order)}
+              />
             </div>
             <Toggle label="Active" name="active" defaultChecked={row.active} />
             <div className="admin-buttons">

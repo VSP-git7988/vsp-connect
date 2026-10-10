@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import type { Profile } from "@/lib/types";
 import { contactUrls } from "@/lib/contact";
+import { profileApiPath } from "@/lib/regions";
 import { track } from "@/lib/analytics-client";
 import { ProfileQr } from "@/components/profile-qr";
 import { CHANNEL_COLORS } from "@/lib/accents";
@@ -87,7 +88,7 @@ export function ProfileActions({
       <div className="primary-actions">
         <a
           className="button primary"
-          href={`/api/profiles/${p.slug}/vcard`}
+          href={profileApiPath(p.slug, "vcard", p.region_code)}
           onClick={() => track(p.id, "save_contact")}
         >
           <Download size={18} /> Save contact
@@ -184,7 +185,9 @@ export function ProfileActions({
         <p className="qr-url">{url}</p>
         <a
           className="button primary"
-          href={`/api/profiles/${p.slug}/qr?download=1`}
+          href={profileApiPath(p.slug, "qr", p.region_code, {
+            download: "1",
+          })}
           download={`${p.slug}-qr.svg`}
         >
           <Download size={16} /> Download QR

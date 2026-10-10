@@ -2,7 +2,7 @@ import type { Company, Profile } from "./types";
 // Editorial starter copy; replace with founder-approved biographies and actual contact details.
 export const company: Company = {
   id: "00000000-0000-4000-8000-000000000001",
-  name: "VSP Innovations",
+  name: "VSP Innovations Pvt Ltd",
   slug: "vsp-innovations",
   logo: null,
   website: null,
@@ -21,7 +21,7 @@ export const seedProfiles: Profile[] = [
   title: "Co-Founder",
   company_id: company.id,
   headline: "Building AI solutions & intelligent products.",
-  bio: "Turning possibilities into products at VSP Innovations. Let’s connect around meaningful problems, intelligent technology, and the ideas that move us forward.",
+  bio: `Turning possibilities into products at ${company.name}. Let’s connect around meaningful problems, intelligent technology, and the ideas that move us forward.`,
   profile_image: null,
   phone: null,
   email: null,

@@ -21,8 +21,7 @@ export type AIGenerateRequest = {
 export type AITokenUsage = { inputTokens: number; outputTokens: number };
 
 export type AIStreamEvent =
-  | { type: "text"; text: string }
-  | { type: "done"; usage: AITokenUsage };
+  { type: "text"; text: string } | { type: "done"; usage: AITokenUsage };
 
 export interface AIProvider {
   /** Stored on ai_usage rows. */

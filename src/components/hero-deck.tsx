@@ -48,10 +48,7 @@ export function HeroDeck({
   // Re-armed whenever the front card changes, so a manual pick restarts it.
   useEffect(() => {
     if (!deck || reduced || focused || touching) return;
-    const t = setTimeout(
-      () => show((active + 1) % founders.length),
-      CYCLE_MS,
-    );
+    const t = setTimeout(() => show((active + 1) % founders.length), CYCLE_MS);
     return () => clearTimeout(t);
   }, [deck, reduced, focused, touching, active, founders.length, show]);
   return (
@@ -59,6 +56,8 @@ export function HeroDeck({
       className="hero-stage"
       data-active={active}
       data-animate={animate || undefined}
+      // One founder: the company card stacks behind it at every width.
+      data-single={founders.length === 1 || undefined}
       // Tapping the back card brings it forward instead of opening it.
       onClickCapture={(e) => {
         const i = slotIndex(e.target);
@@ -84,19 +83,21 @@ export function HeroDeck({
       onTouchCancel={() => setTouching(false)}
     >
       {children}
-      <div className="hero-dots">
-        {founders.map((f, i) => (
-          <button
-            key={f.slug}
-            type="button"
-            className="hero-dot"
-            aria-label={`Show ${f.name}'s card`}
-            aria-pressed={i === active}
-            style={{ "--accent": f.accent } as CSSVars}
-            onClick={() => show(i)}
-          />
-        ))}
-      </div>
+      {founders.length > 1 && (
+        <div className="hero-dots">
+          {founders.map((f, i) => (
+            <button
+              key={f.slug}
+              type="button"
+              className="hero-dot"
+              aria-label={`Show ${f.name}'s card`}
+              aria-pressed={i === active}
+              style={{ "--accent": f.accent } as CSSVars}
+              onClick={() => show(i)}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -39,7 +39,8 @@ export default async function Leads() {
       .limit(200),
     db.from("profiles").select("id,display_name"),
   ]);
-  if (leads.error || profiles.error) throw new Error("Leads could not be loaded.");
+  if (leads.error || profiles.error)
+    throw new Error("Leads could not be loaded.");
   const rows = (leads.data || []) as Row[];
   const names = new Map(
     ((profiles.data || []) as { id: string; display_name: string }[]).map(
@@ -84,7 +85,12 @@ export default async function Leads() {
           </dl>
           <form action={updateLeadStatus} className="admin-form">
             <input type="hidden" name="id" value={row.id} />
-            <Choice label="Status" name="status" options={statuses} defaultValue={row.status} />
+            <Choice
+              label="Status"
+              name="status"
+              options={statuses}
+              defaultValue={row.status}
+            />
             <div className="admin-buttons">
               <button className="button primary">Update status</button>
             </div>

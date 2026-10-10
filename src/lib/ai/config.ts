@@ -3,7 +3,9 @@ export { estimateCost, modelPricing } from "./pricing";
 
 function int(value: string | undefined, fallback: number, max: number) {
   const parsed = Number.parseInt(value ?? "", 10);
-  return Number.isFinite(parsed) && parsed > 0 ? Math.min(parsed, max) : fallback;
+  return Number.isFinite(parsed) && parsed > 0
+    ? Math.min(parsed, max)
+    : fallback;
 }
 function num(value: string | undefined, fallback: number) {
   const parsed = Number.parseFloat(value ?? "");
@@ -23,11 +25,23 @@ export const aiConfig = {
   /** Longest single visitor message accepted, in characters. */
   maxMessageLength: int(process.env.AI_MAX_MESSAGE_LENGTH, 1000, 4000),
   /** Visitor turns allowed in one conversation. */
-  maxMessagesPerConversation: int(process.env.AI_MAX_MESSAGES_PER_CONVERSATION, 25, 200),
+  maxMessagesPerConversation: int(
+    process.env.AI_MAX_MESSAGES_PER_CONVERSATION,
+    25,
+    200,
+  ),
   /** Visitor turns allowed from one anonymous session per hour. */
-  maxMessagesPerSessionHour: int(process.env.AI_MAX_MESSAGES_PER_SESSION_HOUR, 60, 1000),
+  maxMessagesPerSessionHour: int(
+    process.env.AI_MAX_MESSAGES_PER_SESSION_HOUR,
+    60,
+    1000,
+  ),
   /** Visitor turns accepted for one founder profile per minute, across everyone. */
-  maxMessagesPerProfileMinute: int(process.env.AI_MAX_MESSAGES_PER_PROFILE_MINUTE, 30, 600),
+  maxMessagesPerProfileMinute: int(
+    process.env.AI_MAX_MESSAGES_PER_PROFILE_MINUTE,
+    30,
+    600,
+  ),
   /** Prior turns replayed to the model (visitor + assistant combined). */
   maxHistoryMessages: int(process.env.AI_MAX_HISTORY_MESSAGES, 12, 40),
   /** Hard ceiling on generated tokens; also keeps answers short. */
