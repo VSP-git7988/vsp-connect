@@ -206,6 +206,17 @@ const https = z
     message: "Must be an https URL.",
   });
 
+// A portrait is an https URL or a root-relative path to a file in public/.
+// Mirrors profiles_profile_image_check (005_portraits.sql).
+const portrait = z
+  .string()
+  .trim()
+  .max(2048)
+  .transform((value) => value || null)
+  .refine((value) => value === null || /^(https:\/\/|\/[^/])/.test(value), {
+    message: "Must be an https URL or a path such as /name.jpeg.",
+  });
+
 export async function saveProfile(form: FormData) {
   const client = await db();
   const get = fields(form);
@@ -223,6 +234,7 @@ export async function saveProfile(form: FormData) {
       linkedin_url: https.parse(get("linkedin_url")),
       website_url: https.parse(get("website_url")),
       booking_url: booking,
+      profile_image: portrait.parse(get("profile_image")),
       active: checkbox(form.get("active")),
     })
     .eq("id", uuid.parse(get("id")));

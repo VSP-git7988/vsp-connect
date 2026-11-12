@@ -17,6 +17,7 @@ type Row = {
   linkedin_url: string | null;
   website_url: string | null;
   booking_url: string | null;
+  profile_image: string | null;
   active: boolean;
 };
 
@@ -25,7 +26,7 @@ export default async function Profiles() {
   const { data, error } = await db
     .from("profiles")
     .select(
-      "id,slug,display_name,title,headline,bio,phone,email,whatsapp,linkedin_url,website_url,booking_url,active",
+      "id,slug,display_name,title,headline,bio,phone,email,whatsapp,linkedin_url,website_url,booking_url,profile_image,active",
     )
     .order("display_name");
   if (error) throw new Error("Profiles could not be loaded.");
@@ -94,6 +95,12 @@ export default async function Profiles() {
                 name="booking_url"
                 defaultValue={row.booking_url}
                 hint="https://cal.com/…"
+              />
+              <Field
+                label="Portrait"
+                name="profile_image"
+                defaultValue={row.profile_image}
+                hint="File in public/, e.g. /arjun%20devireddy.jpeg, or https://. Empty shows the monogram. Same photo in every region."
               />
             </div>
             <Toggle

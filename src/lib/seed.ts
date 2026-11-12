@@ -10,9 +10,20 @@ export const company: Company = {
     "We turn ambitious ideas into intelligent products. Bringing AI solutions, thoughtful engineering, and purposeful design together to build what comes next.",
 };
 export const seedProfiles: Profile[] = [
-  ["Arjun", "Devireddy", "00000000-0000-4000-8000-000000000011"],
-  ["Kavya", "Kelam", "00000000-0000-4000-8000-000000000012"],
-].map(([first_name, last_name, id]) => ({
+  // Portraits live in public/; one per person, shown in every region.
+  [
+    "Arjun",
+    "Devireddy",
+    "00000000-0000-4000-8000-000000000011",
+    "/arjun%20devireddy.jpeg",
+  ],
+  [
+    "Kavya",
+    "Kelam",
+    "00000000-0000-4000-8000-000000000012",
+    "/kavya%20kelam.jpeg",
+  ],
+].map(([first_name, last_name, id, profile_image]) => ({
   id,
   first_name,
   last_name,
@@ -22,7 +33,7 @@ export const seedProfiles: Profile[] = [
   company_id: company.id,
   headline: "Building AI solutions & intelligent products.",
   bio: `Turning possibilities into products at ${company.name}. Let’s connect around meaningful problems, intelligent technology, and the ideas that move us forward.`,
-  profile_image: null,
+  profile_image,
   phone: null,
   email: null,
   whatsapp: null,

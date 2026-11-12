@@ -14,13 +14,36 @@ create schema auth; create table auth.users(id uuid primary key);
 create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;
 grant usage on schema public,auth to anon,authenticated,service_role;
 grant execute on function auth.uid() to anon,authenticated,service_role;`);
+// Supabase's order: every migration, then the seeds.
 for (const file of [
   "supabase/migrations/001_initial.sql",
-  "supabase/seed.sql",
   "supabase/migrations/002_ai_representative.sql",
+  "supabase/migrations/004_regions.sql",
+  "supabase/migrations/005_portraits.sql",
+  "supabase/seed.sql",
   "supabase/seed_ai.sql",
 ])
   await db.exec(await readFile(file, "utf8"));
+// Portraits: per person, root-relative paths and https only.
+assert.deepEqual(
+  (
+    await db.query<{ slug: string; profile_image: string }>(
+      "select slug,profile_image from public.profiles order by slug",
+    )
+  ).rows,
+  [
+    { slug: "arjun-devireddy", profile_image: "/arjun%20devireddy.jpeg" },
+    { slug: "kavya-kelam", profile_image: "/kavya%20kelam.jpeg" },
+  ],
+);
+for (const bad of ["http://x.test/a.jpg", "//x.test/a.jpg", "javascript:x"])
+  await assert.rejects(
+    db.exec(`update public.profiles set profile_image='${bad}' where id='${ARJUN}'`),
+  );
+await db.exec(
+  `update public.profiles set profile_image='https://x.test/a.jpg' where id='${ARJUN}';
+   update public.profiles set profile_image='/arjun%20devireddy.jpeg' where id='${ARJUN}';`,
+);
 await db.exec(`grant all on all tables in schema public to service_role;
 insert into auth.users values ('${ADMIN}'),('${MEMBER}');
 insert into public.admin_users values ('${ADMIN}');

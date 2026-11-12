@@ -5,6 +5,7 @@ import { Mark } from "@/components/brand";
 import { ProfileQr } from "@/components/profile-qr";
 import { DEFAULT_ACCENT, profileAccent } from "@/lib/accents";
 import { HeroDeck } from "@/components/hero-deck";
+import { Portrait } from "@/components/avatar";
 import { regionPath } from "@/lib/regions";
 type CSSVars = React.CSSProperties & Record<`--${string}`, string>;
 // x%, y%, size px, twinkle duration s, delay s
@@ -65,9 +66,16 @@ function FounderCard({
     >
       <Link href={regionPath(p.region_code, p.slug)} className="hero-card">
         <span className="hero-card-top">
+          {/* Hidden from assistive tech: the card already reads the name. */}
           <span aria-hidden="true" className="hero-monogram">
-            {p.first_name[0]}
-            {p.last_name[0]}
+            {p.profile_image ? (
+              <Portrait profile={p} spot="hero" />
+            ) : (
+              <>
+                {p.first_name[0]}
+                {p.last_name[0]}
+              </>
+            )}
           </span>
           <ProfileQr profile={p} size={96} className="hero-card-qr" />
         </span>
