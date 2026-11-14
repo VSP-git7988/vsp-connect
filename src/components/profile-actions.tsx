@@ -142,7 +142,7 @@ export function ProfileActions({
         <div>
           <h3>Good conversations build great things.</h3>
           <p>
-            {p.booking_url
+            {(p.region_code === "us" ? links.booking : p.booking_url)
               ? "Find a time to explore what’s possible."
               : "Meeting availability will be shared here."}
           </p>

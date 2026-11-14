@@ -275,3 +275,90 @@ export async function deleteConversation(form: FormData) {
   if (error) throw new Error("Conversation could not be removed.");
   refresh("/admin/conversations");
 }
+
+export async function savePortfolio(form: FormData) {
+  const client = await db();
+  const get = fields(form);
+  const row = {
+    profile_id: uuid.parse(get("profile_id")),
+    region_code: z.literal("us").parse(get("region_code")),
+    title: required(200).parse(get("title")),
+    summary: required(400).parse(get("summary")),
+    category: required(120).parse(get("category")),
+    url: https
+      .refine((v) => v === null || (v.length <= 2048 && URL.canParse(v)))
+      .parse(get("url")),
+    sort_order: z.coerce
+      .number()
+      .int()
+      .min(0)
+      .max(999)
+      .parse(get("sort_order")),
+    active: checkbox(form.get("active")),
+  };
+  const id = get("id");
+  const { error } = id
+    ? await client
+        .from("portfolio_items")
+        .update(row)
+        .eq("id", uuid.parse(id))
+        .eq("region_code", "us")
+    : await client.from("portfolio_items").insert(row);
+  if (error) throw new Error("Portfolio item could not be saved.");
+  refresh("/admin/portfolio");
+}
+export async function deletePortfolio(form: FormData) {
+  const client = await db();
+  const { error } = await client
+    .from("portfolio_items")
+    .delete()
+    .eq("id", uuid.parse(String(form.get("id"))))
+    .eq("region_code", "us");
+  if (error) throw new Error("Portfolio item could not be removed.");
+  refresh("/admin/portfolio");
+}
+
+export async function saveUSProfile(form: FormData) {
+  const client = await db();
+  const get = fields(form);
+  const services = z
+    .array(required(600))
+    .max(30)
+    .parse(
+      get("services")
+        .split(/\r?\n/)
+        .map((value) => value.trim())
+        .filter(Boolean),
+    );
+  const booking = https
+    .refine(
+      (value) => {
+        if (value === null) return true;
+        if (value.length > 2048 || !URL.canParse(value)) return false;
+        const url = new URL(value);
+        return (
+          url.hostname === "cal.com" &&
+          url.protocol === "https:" &&
+          !url.port &&
+          !url.username &&
+          !url.password &&
+          url.pathname.length > 1
+        );
+      },
+      {
+        message:
+          "Enter a Cal.com booking link such as https://cal.com/name/meeting.",
+      },
+    )
+    .parse(get("booking_url"));
+  const { data, error } = await client
+    .from("profile_regions")
+    .update({ services, booking_url: booking })
+    .eq("profile_id", uuid.parse(get("profile_id")))
+    .eq("region_code", "us")
+    .select("profile_id")
+    .single();
+  if (error || !data)
+    throw new Error("US profile settings could not be saved.");
+  refresh("/admin/us-profiles");
+}

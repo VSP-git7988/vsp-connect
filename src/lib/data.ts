@@ -1,3 +1,5 @@
+import { resolveUSBookingUrl } from "./contact";
+import { usCredential, usServices } from "./us-content";
 import { cache } from "react";
 import { configured, publicDb } from "./supabase";
 import { company, seedProfiles } from "./seed";
@@ -85,6 +87,9 @@ type Membership = {
   whatsapp: string | null;
   email: string | null;
   role_title: string | null;
+  credential: string | null;
+  services: string[] | null;
+  booking_url?: string | null;
 };
 // Visible memberships of a region (row-level security hides the rest), or null
 // when the profile_regions table does not exist.
@@ -93,9 +98,7 @@ const getMemberships = cache(
     if (!configured) return null;
     const { data, error } = await publicDb()
       .from("profile_regions")
-      .select(
-        "profile_id,is_primary,sort_order,phone,whatsapp,email,role_title",
-      )
+      .select("*")
       .eq("region_code", code);
     if (missingTable(error)) return null;
     if (error)
@@ -110,7 +113,16 @@ export const getRegionProfiles = cache(
       getProfiles(),
       getMemberships(code),
     ]);
-    if (!members) return profiles.map((p) => ({ ...p, region_code: code }));
+    if (!members)
+      return profiles
+        .filter((p) => code !== "us" || p.slug === "arjun-devireddy")
+        .map((p) => ({
+          ...p,
+          region_code: code,
+          ...(code === "us"
+            ? { credential: usCredential, services: usServices }
+            : {}),
+        }));
     const index = new Map(profiles.map((p, i) => [p.id, i]));
     return members
       .filter((m) => index.has(m.profile_id))
@@ -128,7 +140,13 @@ export const getRegionProfiles = cache(
           phone: m.phone ?? p.phone,
           whatsapp: m.whatsapp ?? p.whatsapp,
           email: m.email ?? p.email,
+          booking_url:
+            code === "us"
+              ? resolveUSBookingUrl(m.booking_url, p.booking_url)
+              : p.booking_url,
           region_code: code,
+          credential: m.credential,
+          services: m.services ?? undefined,
         };
       });
   },
@@ -142,3 +160,31 @@ export async function requestRegion(req: Request) {
   const code = new URL(req.url).searchParams.get("region");
   return code ? getRegion(code) : getDefaultRegion();
 }
+
+export type PortfolioItem = {
+  id: string;
+  profile_id: string;
+  region_code: string;
+  title: string;
+  summary: string;
+  category: string;
+  url: string | null;
+  sort_order: number;
+  active: boolean;
+};
+export const getPortfolio = cache(
+  async (profileId: string, region: string): Promise<PortfolioItem[]> => {
+    if (!configured || region !== "us") return [];
+    const { data, error } = await publicDb()
+      .from("portfolio_items")
+      .select("*")
+      .eq("profile_id", profileId)
+      .eq("region_code", region)
+      .eq("active", true)
+      .order("sort_order")
+      .order("created_at");
+    if (missingTable(error)) return [];
+    if (error) throw new Error("Portfolio could not be loaded.");
+    return data ?? [];
+  },
+);

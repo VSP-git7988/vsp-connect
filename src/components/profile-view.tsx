@@ -1,10 +1,16 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { ArrowLeft, ArrowUpRight, Building2 } from "lucide-react";
-import { getCompany, getRegionProfile, getRegionProfiles } from "@/lib/data";
+import {
+  getPortfolio,
+  getCompany,
+  getRegionProfile,
+  getRegionProfiles,
+} from "@/lib/data";
 import { regionPath, regionUrl } from "@/lib/regions";
 import type { Region } from "@/lib/types";
 import { Avatar } from "@/components/avatar";
+import { USServices } from "@/components/us-services";
 import { ProfileActions } from "@/components/profile-actions";
 import { Reveal } from "@/components/reveal";
 import { safeWebUrl } from "@/lib/contact";
@@ -23,10 +29,11 @@ export async function ProfileView({
   if (slug === "vsp-innovations") redirect(regionPath(region.code));
   const p = await getRegionProfile(slug, region.code);
   if (!p) notFound();
-  const [company, profiles, ai] = await Promise.all([
+  const [company, profiles, ai, portfolio] = await Promise.all([
     getCompany(p.company_id),
     getRegionProfiles(region.code),
     getAIContext(p),
+    getPortfolio(p.id, region.code),
   ]);
   // Hidden in a region where this is the only founder listed.
   const others = profiles.filter(
@@ -35,7 +42,7 @@ export async function ProfileView({
   return (
     <main id="main" className="profile-main" style={accentStyle(p)}>
       <Link href={regionPath(region.code)} className="back-link">
-        <ArrowLeft size={15} /> Our people
+        <ArrowLeft size={15} /> {region.code === "us" ? "Back" : "Our people"}
       </Link>
       <Reveal className="identity-panel">
         <div className="identity-banner">
@@ -52,7 +59,11 @@ export async function ProfileView({
             <p className="role">
               {p.title} <span> / </span> {company.name}
             </p>
-            <h2>{p.headline}</h2>
+            {region.code === "us" ? (
+              p.credential && <p className="credential">{p.credential}</p>
+            ) : (
+              <h2>{p.headline}</h2>
+            )}
           </div>
           {ai.enabled && (
             <AIAssistant
@@ -65,51 +76,85 @@ export async function ProfileView({
           <ProfileActions profile={p} url={regionUrl(region.code, p.slug)} />
         </div>
       </Reveal>
-      <div className="profile-details">
-        <section>
-          <div className="eyebrow">A LITTLE ABOUT ME</div>
-          <h2>Driven by what’s possible.</h2>
-          <p>{p.bio}</p>
-          <div className="expertise">
-            {p.expertise.map((x) => (
-              <span key={x.name}>{x.name}</span>
+      {region.code !== "us" && (
+        <div className="profile-details">
+          <section>
+            <div className="eyebrow">A LITTLE ABOUT ME</div>
+            <h2>Driven by what’s possible.</h2>
+            <p>{p.bio}</p>
+            {region.code !== "us" && (
+              <div className="expertise">
+                {p.expertise.map((x) => (
+                  <span key={x.name}>{x.name}</span>
+                ))}
+              </div>
+            )}
+            {p.social_links
+              .filter((x) => safeWebUrl(x.url))
+              .map((x) => (
+                <a
+                  className="text-link"
+                  href={x.url}
+                  key={x.platform + x.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {x.label} <ArrowUpRight size={15} />
+                </a>
+              ))}
+          </section>
+          {region.code !== "us" && (
+            <section className="profile-company">
+              <Building2 size={23} />
+              <div className="eyebrow">BUILDING AT</div>
+              <h2>{company.name}</h2>
+              <h3>AI Solutions & Product Development</h3>
+              <p>{company.description}</p>
+              <Link className="text-link" href={regionPath(region.code)}>
+                Meet {company.name} <ArrowUpRight size={16} />
+              </Link>
+              {safeWebUrl(company.website) && (
+                <a
+                  className="text-link"
+                  href={company.website!}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Company website <ArrowUpRight size={16} />
+                </a>
+              )}
+            </section>
+          )}
+        </div>
+      )}
+      {region.code === "us" && p.services?.length ? (
+        <USServices services={p.services} />
+      ) : null}
+      {portfolio.length > 0 && (
+        <section className="us-work">
+          <div className="eyebrow">SELECTED WORK</div>
+          <h2>Portfolio</h2>
+          <div className="portfolio-grid">
+            {portfolio.map((item) => (
+              <article className="portfolio-card" key={item.id}>
+                <span className="eyebrow">{item.category}</span>
+                <h3>{item.title}</h3>
+                <p>{item.summary}</p>
+                {item.url && safeWebUrl(item.url) && (
+                  <a
+                    className="text-link"
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    View project <ArrowUpRight size={15} />
+                  </a>
+                )}
+              </article>
             ))}
           </div>
-          {p.social_links
-            .filter((x) => safeWebUrl(x.url))
-            .map((x) => (
-              <a
-                className="text-link"
-                href={x.url}
-                key={x.platform + x.url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {x.label} <ArrowUpRight size={15} />
-              </a>
-            ))}
         </section>
-        <section className="profile-company">
-          <Building2 size={23} />
-          <div className="eyebrow">BUILDING AT</div>
-          <h2>{company.name}</h2>
-          <h3>AI Solutions & Product Development</h3>
-          <p>{company.description}</p>
-          <Link className="text-link" href={regionPath(region.code)}>
-            Meet {company.name} <ArrowUpRight size={16} />
-          </Link>
-          {safeWebUrl(company.website) && (
-            <a
-              className="text-link"
-              href={company.website!}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Company website <ArrowUpRight size={16} />
-            </a>
-          )}
-        </section>
-      </div>
+      )}
       {others.length > 0 && (
         <section className="other-founders">
           <div className="eyebrow">MORE MINDS. SHARED VISION.</div>

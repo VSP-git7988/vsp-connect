@@ -26,6 +26,8 @@ export type Profile = {
   active: boolean;
   // Set when the profile was loaded for a region, with that region's overrides.
   region_code?: string;
+  credential?: string | null;
+  services?: string[];
   expertise: { name: string; sort_order: number }[];
   social_links: {
     platform: string;

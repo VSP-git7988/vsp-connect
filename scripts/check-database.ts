@@ -20,6 +20,9 @@ for (const file of [
   "supabase/migrations/002_ai_representative.sql",
   "supabase/migrations/004_regions.sql",
   "supabase/migrations/005_portraits.sql",
+  "supabase/migrations/005_portfolio.sql",
+  "supabase/migrations/006_us_content.sql",
+  "supabase/migrations/007_region_booking.sql",
   "supabase/seed.sql",
   "supabase/seed_ai.sql",
 ])
@@ -38,7 +41,9 @@ assert.deepEqual(
 );
 for (const bad of ["http://x.test/a.jpg", "//x.test/a.jpg", "javascript:x"])
   await assert.rejects(
-    db.exec(`update public.profiles set profile_image='${bad}' where id='${ARJUN}'`),
+    db.exec(
+      `update public.profiles set profile_image='${bad}' where id='${ARJUN}'`,
+    ),
   );
 await db.exec(
   `update public.profiles set profile_image='https://x.test/a.jpg' where id='${ARJUN}';
@@ -56,8 +61,82 @@ const asRole = (role: string, subject?: string) =>
 const rows = async (sql: string) => (await db.query(sql)).rows;
 const one = async <T>(sql: string) => (await db.query<T>(sql)).rows[0];
 
+// Portfolio permissions: active public read, administrator writes only.
+await db.exec(
+  `insert into public.profile_regions(profile_id,region_code) values ('${ARJUN}','us') on conflict do nothing`,
+);
+// Region settings remain separate from India and from the global profile.
+await asRole("authenticated", ADMIN);
+await db.exec(
+  `update public.profile_regions set services=array['US-only test service'], booking_url='https://cal.com/arjun/test' where profile_id='${ARJUN}' and region_code='us'`,
+);
+await asRole("anon");
+assert.equal(
+  (
+    await one<{ booking_url: string }>(
+      `select booking_url from public.profile_regions where profile_id='${ARJUN}' and region_code='us'`,
+    )
+  )?.booking_url,
+  "https://cal.com/arjun/test",
+);
+assert.equal(
+  (
+    await one<{ booking_url: string | null }>(
+      `select booking_url from public.profile_regions where profile_id='${ARJUN}' and region_code='in'`,
+    )
+  )?.booking_url,
+  null,
+);
+await asRole("authenticated", MEMBER);
+assert.equal(
+  (
+    await rows(
+      `update public.profile_regions set booking_url='https://cal.com/other/test' where region_code='us' returning id`,
+    )
+  ).length,
+  0,
+);
+await asRole("authenticated", ADMIN);
+await assert.rejects(
+  db.exec(
+    `update public.profile_regions set booking_url='https://example.com/test' where region_code='us'`,
+  ),
+);
+await db.exec("reset role");
+assert.equal((await rows("select * from public.portfolio_items")).length, 0);
+await asRole("authenticated", ADMIN);
+await db.exec(
+  `insert into public.portfolio_items(profile_id,region_code,title,summary,category) values ('${ARJUN}','us','RLS test','Temporary test entry','Test')`,
+);
+await asRole("anon");
+assert.equal((await rows("select * from public.portfolio_items")).length, 1);
+await assert.rejects(
+  db.exec(
+    `insert into public.portfolio_items(profile_id,region_code,title,summary,category) values ('${ARJUN}','us','Bad','Bad','Bad')`,
+  ),
+);
+await asRole("authenticated", MEMBER);
+assert.equal(
+  (await rows("update public.portfolio_items set title='Bad' returning id"))
+    .length,
+  0,
+);
+assert.equal(
+  (await rows("delete from public.portfolio_items returning id")).length,
+  0,
+);
+await asRole("authenticated", ADMIN);
+await db.exec("update public.portfolio_items set active=false");
+await asRole("anon");
+assert.equal((await rows("select * from public.portfolio_items")).length, 0);
+await asRole("authenticated", ADMIN);
+await db.exec("delete from public.portfolio_items");
+await db.exec("reset role");
+await db.exec(
+  `delete from public.profile_regions where profile_id='${ARJUN}' and region_code='us'`,
+);
 // ------------------------------------------------------------ anonymous
-await db.exec("set role anon");
+await asRole("anon");
 assert.equal((await rows("select * from public.profiles")).length, 2);
 await assert.rejects(db.exec("update public.profiles set title='Hacked'"));
 await assert.rejects(db.query("select * from public.analytics_events"));
@@ -106,7 +185,10 @@ for (const call of [
 
 // ------------------------------------------- ordinary authenticated user
 await asRole("authenticated", MEMBER);
-assert.equal((await rows("select * from public.analytics_summary()")).length, 0);
+assert.equal(
+  (await rows("select * from public.analytics_summary()")).length,
+  0,
+);
 assert.equal((await rows("select * from public.ai_summary()")).length, 0);
 assert.equal(
   (await rows("update public.profiles set title='Hacked' returning id")).length,
@@ -163,14 +245,25 @@ await asRole("service_role");
     assert.ok(list.includes("What VSP Innovations is"));
   // Core identity survives a query that matches nothing; pricing policy is found.
   assert.ok((await titles(ARJUN, "zzzz qqqq")).length > 0);
-  assert.ok((await titles(ARJUN, "how much does this cost")).includes("Pricing"));
+  assert.ok(
+    (await titles(ARJUN, "how much does this cost")).includes("Pricing"),
+  );
   // Retrieval is bounded and inactive rows are excluded.
   assert.ok((await titles(ARJUN, "ai")).length <= 12);
-  await db.exec("update public.knowledge_sources set active=false where title='Pricing'");
-  assert.ok(!(await titles(ARJUN, "how much does this cost")).includes("Pricing"));
-  await db.exec("update public.knowledge_sources set active=true where title='Pricing'");
+  await db.exec(
+    "update public.knowledge_sources set active=false where title='Pricing'",
+  );
+  assert.ok(
+    !(await titles(ARJUN, "how much does this cost")).includes("Pricing"),
+  );
+  await db.exec(
+    "update public.knowledge_sources set active=true where title='Pricing'",
+  );
   // An unknown or inactive profile retrieves nothing at all.
-  assert.equal((await titles("00000000-0000-4000-8000-0000000009ff", "ai")).length, 0);
+  assert.equal(
+    (await titles("00000000-0000-4000-8000-0000000009ff", "ai")).length,
+    0,
+  );
 }
 
 // Conversation storage, rate limiting and spend controls.
@@ -206,7 +299,11 @@ await asRole("service_role");
   assert.equal(await rate(conversation), "conversation", "conversation cap");
   assert.equal(await rate(null, 25, 10, 100), "session", "session hourly cap");
   assert.equal(await rate(null, 25, 1000, 5), "busy", "per-profile burst cap");
-  assert.equal(await rate(null, 1000, 1000, 1000), "ok", "limits are configurable");
+  assert.equal(
+    await rate(null, 1000, 1000, 1000),
+    "ok",
+    "limits are configurable",
+  );
   // An unknown profile is never chargeable.
   assert.equal(
     (
@@ -224,7 +321,10 @@ await asRole("service_role");
             ('${KAVYA}',null,'anthropic','claude-sonnet-5',900,240,0.004200)`,
   );
   assert.equal(
-    Number((await one<{ spend: string }>("select public.ai_spend_today() as spend")).spend),
+    Number(
+      (await one<{ spend: string }>("select public.ai_spend_today() as spend"))
+        .spend,
+    ),
     0.0096,
   );
   await assert.rejects(
@@ -269,14 +369,26 @@ await asRole("service_role");
     "booking_from_ai",
   ])
     assert.equal(await record(event), true, `${event} must be accepted`);
-  await assert.rejects(db.query(`select public.record_analytics_event('${ARJUN}','sql_drop',null,null,null)`));
+  await assert.rejects(
+    db.query(
+      `select public.record_analytics_event('${ARJUN}','sql_drop',null,null,null)`,
+    ),
+  );
   // Only allowlisted metadata is stored, and only in a recognised shape.
-  assert.equal(await record("solution_viewed", "'qr'", "'ai-voice-agents'"), true);
-  assert.equal(await record("solution_viewed", "'spoofed'", "'DROP TABLE leads'"), true);
+  assert.equal(
+    await record("solution_viewed", "'qr'", "'ai-voice-agents'"),
+    true,
+  );
+  assert.equal(
+    await record("solution_viewed", "'spoofed'", "'DROP TABLE leads'"),
+    true,
+  );
   const stored = await rows(
     `select metadata from public.analytics_events where event_type='solution_viewed' order by created_at`,
   );
-  assert.deepEqual(stored[1], { metadata: { source: "qr", solution: "ai-voice-agents" } });
+  assert.deepEqual(stored[1], {
+    metadata: { source: "qr", solution: "ai-voice-agents" },
+  });
   assert.deepEqual(stored[2], { metadata: {} });
   // The per-profile cap still applies, at the raised V2 limit.
   let accepted = 0;
@@ -329,7 +441,9 @@ assert.equal(
     leads: string;
     estimated_cost: string;
   }>("select * from public.ai_summary()");
-  const arjun = summary.rows.find((row) => row.display_name === "Arjun Devireddy");
+  const arjun = summary.rows.find(
+    (row) => row.display_name === "Arjun Devireddy",
+  );
   assert.equal(Number(arjun?.conversations), 1);
   assert.equal(Number(arjun?.visitor_messages), 25);
   assert.equal(Number(arjun?.leads), 1);
@@ -343,6 +457,50 @@ assert.equal(
 await asRole("anon");
 await assert.rejects(db.query("select * from public.messages"));
 
+// User-supplied US catalogue: migration also provisions the previously absent table.
+await db.exec("reset role");
+await db.exec(
+  `insert into public.profile_regions(profile_id,region_code) values ('${ARJUN}','us') on conflict do nothing`,
+);
+const indiaBefore = await rows(
+  "select * from public.profile_regions where region_code='in' order by profile_id",
+);
+await db.exec("drop table public.portfolio_items");
+const contentMigration = await readFile(
+  "supabase/migrations/008_us_arjun_content.sql",
+  "utf8",
+);
+await db.exec(contentMigration);
+await db.exec(contentMigration); // Repeat without duplicate projects.
+const supplied = JSON.parse(
+  await readFile("supabase/content/us-arjun.json", "utf8"),
+);
+const projects = await rows(
+  `select title,summary,category,url from public.portfolio_items where profile_id='${ARJUN}' and region_code='us' order by sort_order`,
+);
+assert.deepEqual(projects, supplied.portfolio);
+const serviceRow = await one<{ services: string[] }>(
+  `select services from public.profile_regions where profile_id='${ARJUN}' and region_code='us'`,
+);
+assert.deepEqual(
+  serviceRow.services,
+  supplied.services.map((s: { name: string; description: string | null }) =>
+    s.description ? s.name + " | " + s.description : s.name,
+  ),
+);
+assert.deepEqual(
+  await rows(
+    "select * from public.profile_regions where region_code='in' order by profile_id",
+  ),
+  indiaBefore,
+);
+await asRole("anon");
+assert.equal((await rows("select * from public.portfolio_items")).length, 9);
+assert.equal(
+  (await rows("select * from public.portfolio_items where url is null")).length,
+  5,
+);
+await assert.rejects(db.exec("update public.portfolio_items set active=false"));
 await db.close();
 console.log(
   "PASS: V1+V2 migrations and seeds, anon/ordinary/admin RLS on ten tables, founder-scoped retrieval, AI rate limits, spend guard, lead constraints, V2 analytics metadata allowlist, 240-event cap, dashboard aggregation.",

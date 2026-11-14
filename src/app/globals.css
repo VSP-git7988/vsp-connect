@@ -2760,3 +2760,23 @@ th {
     margin-top: 0;
   }
 }
+
+.credential { color: var(--accent); font-weight: 600; }
+.us-work { margin: 48px 0; }
+.us-work h2 { margin: 12px 0 24px; font-size: var(--fs-h2); font-weight: 400; letter-spacing: -0.025em; }
+.portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,280px),1fr)); gap: 20px; }
+.portfolio-card { padding: 24px; border: 1px solid var(--line); border-radius: 20px; background: var(--card-bg, #15151c); overflow-wrap: anywhere; }
+.portfolio-card h3 { margin: 12px 0; }
+.portfolio-card p { margin-bottom: 20px; }
+
+.profile-details.profile-details-us { grid-template-columns: minmax(0, 1fr); }
+
+/* US profile services: match the landing capabilities' icon treatment. */
+.us-services { margin: 40px 0 64px; padding-top: 36px; border-top: 1px solid var(--line); position: relative; isolation: isolate; }
+.us-services h2 { margin: 12px 0 28px; font-size: var(--fs-h2); font-weight: 400; letter-spacing: -0.025em; }
+.us-services-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; }
+.us-service-card { display: flex; align-items: flex-start; gap: 16px; padding: 24px; border: 1px solid var(--line); border-radius: 16px; background: var(--card-bg, #15151c); overflow-wrap: anywhere; }
+.us-service-icon { display: grid; place-items: center; flex: 0 0 42px; width: 42px; height: 42px; border: 1px solid var(--line); border-radius: 10px; background: #ffffff05; color: var(--accent); }
+.us-service-card h3 { font-size: var(--fs-body); font-weight: 500; margin: 2px 0 8px; }
+.us-service-card p { font-size: var(--fs-small); color: var(--text-secondary); line-height: 1.6; margin: 0; }
+@media (max-width: 767.98px) { .us-services { margin: 28px 0 48px; padding-top: 28px; } .us-services-grid { grid-template-columns: minmax(0,1fr); gap: 14px; } .us-service-card { padding: 20px; } }

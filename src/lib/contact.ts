@@ -48,6 +48,17 @@ export function safeWebUrl(url: string | null) {
   }
 }
 
+// US region overrides take priority. Empty or unusable overrides inherit the
+// profile URL, so an empty string cannot suppress a configured booking link.
+export function resolveUSBookingUrl(
+  override: string | null | undefined,
+  fallback: string | null,
+) {
+  return (
+    safeWebUrl(override?.trim() || null) || safeWebUrl(fallback?.trim() || null)
+  );
+}
+
 export function contactUrls(p: Profile) {
   return {
     call: p.phone ? `tel:${p.phone.replace(/[^+\d]/g, "")}` : null,

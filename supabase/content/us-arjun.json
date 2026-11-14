@@ -1,0 +1,84 @@
+{
+  "services": [
+    {
+      "name": "Full-stack web applications",
+      "description": "Next.js, Supabase and Vercel builds with auth, role-based portals, admin dashboards and CMS-style controls"
+    },
+    {
+      "name": "AI products",
+      "description": "Our own products, including an AI tutor, AI visiting card and AI CEO"
+    },
+    {
+      "name": "AI features inside client products",
+      "description": "Claude-powered assistants, voice and Telugu language layers, and n8n workflow integrations"
+    },
+    {
+      "name": "Mobile apps",
+      "description": "iOS and Android apps, with Flutter planned for later phases"
+    },
+    {
+      "name": "Business and marketing websites",
+      "description": "Redesigns and new builds, including 3D and animated sites"
+    },
+    {
+      "name": "Intelligence System",
+      "description": null
+    }
+  ],
+  "portfolio": [
+    {
+      "title": "LMS Portal",
+      "summary": "Admin, faculty and student portals with OTP login, admissions workflow, course content, quizzes, attendance and emails",
+      "category": "Client project",
+      "url": "https://biblicalseminary.in"
+    },
+    {
+      "title": "Cookinpot",
+      "summary": "Restaurant site with menu and cuisine pages, catering and table reservations, gallery uploads, an admin panel and a Q&A chatbot",
+      "category": "Client project",
+      "url": "https://cookinpotusa.com"
+    },
+    {
+      "title": "Abhi Trainings",
+      "summary": "AI voice trainer platform for IT professionals with six trainer personas",
+      "category": "Own product",
+      "url": "https://abhi-trainings.vercel.app"
+    },
+    {
+      "title": "VSP Innovations",
+      "summary": "Company site with a Claude-powered assistant and Cal.com booking",
+      "category": "Own product",
+      "url": "https://vspinnovations.com"
+    },
+    {
+      "title": "Faith Temple",
+      "summary": "Modern church site redesign with a Supabase-driven gallery, settings and videos",
+      "category": "Client project",
+      "url": null
+    },
+    {
+      "title": "VSP Connect",
+      "summary": "Digital business cards with founder profiles, QR and NFC, and a per-founder AI representative",
+      "category": "Own product",
+      "url": null
+    },
+    {
+      "title": "Acharya Bhaarathi",
+      "summary": "Teacher-controlled AI Telugu classroom with voice",
+      "category": "Own product",
+      "url": null
+    },
+    {
+      "title": "Cinematic Thinking Engine",
+      "summary": "Think, Plan, Direct tool for visual content creators, with fal.ai video generation",
+      "category": "Own product",
+      "url": null
+    },
+    {
+      "title": "RK Genesis",
+      "summary": "3D corporate website with a services navbar and a site-specific chatbot",
+      "category": "Client project",
+      "url": null
+    }
+  ]
+}

@@ -3,6 +3,7 @@ import { connection } from "next/server";
 import { getCompany } from "@/lib/data";
 import { company as fallbackCompany } from "@/lib/seed";
 import { HomeLink } from "@/components/home-link";
+import { RegionChrome } from "@/components/region-chrome";
 export function Mark({ small = false }: { small?: boolean }) {
   return (
     <span aria-hidden="true" className={`brand-mark ${small ? "small" : ""}`}>
@@ -30,9 +31,11 @@ export function Header() {
       <div className="header-note">
         <span className="status-dot" /> Designed for connection
       </div>
-      <HomeLink className="header-link">
-        Our people <span>↗</span>
-      </HomeLink>
+      <RegionChrome>
+        <HomeLink className="header-link">
+          Our people <span>↗</span>
+        </HomeLink>
+      </RegionChrome>
     </header>
   );
 }
@@ -43,17 +46,28 @@ export async function Footer() {
   await connection();
   const company = await getCompany().catch(() => fallbackCompany);
   return (
-    <footer>
-      <Link href="/" className="footer-brand">
-        <Mark small /> {company.name}
-      </Link>
-      <span>Intelligent products. Human connections.</span>
-      <span className="footer-links">
-        <Link href="/privacy">Privacy</Link>
-        <Link href="/admin">
-          Team access <span aria-hidden="true">↗</span>
+    <RegionChrome
+      us={
+        <footer>
+          <span>
+            &copy; {new Date().getFullYear()} {company.name}. All rights
+            reserved.
+          </span>
+        </footer>
+      }
+    >
+      <footer>
+        <Link href="/" className="footer-brand">
+          <Mark small /> {company.name}
         </Link>
-      </span>
-    </footer>
+        <span>Intelligent products. Human connections.</span>
+        <span className="footer-links">
+          <Link href="/privacy">Privacy</Link>
+          <Link href="/admin">
+            Team access <span aria-hidden="true">↗</span>
+          </Link>
+        </span>
+      </footer>
+    </RegionChrome>
   );
 }

@@ -84,7 +84,11 @@ export async function RegionLanding({ region }: { region: Region }) {
               <div className="role">
                 {p.title} <span> / </span> {company.name}
               </div>
-              <p>{p.headline}</p>
+              {region.code === "us" ? (
+                p.credential && <p>{p.credential}</p>
+              ) : (
+                <p>{p.headline}</p>
+              )}
               <div className="founder-bottom">
                 <span>
                   <span className="status-dot" /> Let’s connect
@@ -102,7 +106,9 @@ export async function RegionLanding({ region }: { region: Region }) {
       </section>
       <section className="company-strip">
         <div className="company-intro">
-          <span className="eyebrow">THIS IS VSP INNOVATIONS</span>
+          <span className="eyebrow">
+            THIS IS VSP INNOVATIONS{region.code === "us" ? " PVT LTD" : ""}
+          </span>
           <h2>Intelligence, with intention.</h2>
           <p>
             We bring technology and ambition together to create AI solutions and
@@ -125,7 +131,8 @@ export async function RegionLanding({ region }: { region: Region }) {
           <div>
             <Sparkles />
             <span>
-              Intelligent Automation<small>Less friction. More forward.</small>
+              Intelligent Automation
+              <small>Less friction. More forward.</small>
             </span>
           </div>
         </div>

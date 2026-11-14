@@ -26,9 +26,11 @@ export const requireAdmin = cache(async () => {
 export const adminSections = [
   ["/admin", "Overview"],
   ["/admin/profiles", "Profiles"],
+  ["/admin/us-profiles", "US services & booking"],
   ["/admin/ai", "AI identity"],
   ["/admin/knowledge", "Knowledge"],
   ["/admin/solutions", "Solutions"],
+  ["/admin/portfolio", "US portfolio"],
   ["/admin/questions", "Questions"],
   ["/admin/leads", "Leads"],
   ["/admin/conversations", "Conversations"],
