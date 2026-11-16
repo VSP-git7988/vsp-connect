@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound, redirect } from "next/navigation";
 import { ArrowLeft, ArrowUpRight, Building2 } from "lucide-react";
 import {
@@ -17,6 +18,12 @@ import { safeWebUrl } from "@/lib/contact";
 import { AIAssistant } from "@/components/ai-assistant";
 import { getAIContext } from "@/lib/ai/data";
 import { accentStyle } from "@/lib/accents";
+const portfolioImages: Record<string, string> = {
+  "https://biblicalseminary.in": "/portfolio/lms-portal.jpg",
+  "https://cookinpotusa.com": "/portfolio/cookinpot.jpg",
+  "https://abhi-trainings.vercel.app": "/portfolio/abhi-trainings.jpg",
+  "https://vspinnovations.com": "/portfolio/vsp-innovations.jpg",
+};
 // A profile as listed in one region: /[slug] for the default region,
 // /[code]/[slug] for the others.
 export async function ProfileView({
@@ -137,9 +144,22 @@ export async function ProfileView({
           <div className="portfolio-grid">
             {portfolio.map((item) => (
               <article className="portfolio-card" key={item.id}>
-                <span className="eyebrow">{item.category}</span>
+                {region.code !== "us" && (
+                  <span className="eyebrow">{item.category}</span>
+                )}
                 <h3>{item.title}</h3>
-                <p>{item.summary}</p>
+                {region.code === "us" &&
+                  item.url &&
+                  portfolioImages[item.url] && (
+                    <Image
+                      className="portfolio-image"
+                      src={portfolioImages[item.url]}
+                      alt={`${item.title} website preview`}
+                      width={1200}
+                      height={800}
+                    />
+                  )}
+                {region.code !== "us" && <p>{item.summary}</p>}
                 {item.url && safeWebUrl(item.url) && (
                   <a
                     className="text-link"

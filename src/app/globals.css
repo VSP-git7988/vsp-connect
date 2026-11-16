@@ -2780,3 +2780,18 @@ th {
 .us-service-card h3 { font-size: var(--fs-body); font-weight: 500; margin: 2px 0 8px; }
 .us-service-card p { font-size: var(--fs-small); color: var(--text-secondary); line-height: 1.6; margin: 0; }
 @media (max-width: 767.98px) { .us-services { margin: 28px 0 48px; padding-top: 28px; } .us-services-grid { grid-template-columns: minmax(0,1fr); gap: 14px; } .us-service-card { padding: 20px; } }
+
+/* US-only hero additions. */
+.hero-art-us .section-heading { width: 100%; justify-content: center; text-align: center; margin-bottom: 0; }
+.hero-qr-label { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.hero-qr-label small { color: var(--text-secondary); font-size: 11px; }
+.hero-scan-prompt { display: contents; }
+.hero-card-cta-us { flex-wrap: wrap; justify-content: space-between; gap: 10px; }
+.hero-card-cta-us .hero-scan-prompt { display: inline-flex; align-items: center; gap: 6px; }
+.hero-card-cta-us .view-profile { display: inline-flex; align-items: center; gap: 4px; padding: 6px 9px; white-space: nowrap; }
+a.hero-card:hover .view-profile, a.hero-card:focus-visible .view-profile { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 18%, transparent); }
+.portfolio-image { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; object-position: top; border-radius: 10px; margin: 16px 0 20px; }
+
+@media (min-width: 768px) {
+  .hero-art-us .hero-stage { --card-w: 350px; }
+}

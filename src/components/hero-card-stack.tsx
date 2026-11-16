@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ScanLine } from "lucide-react";
+import { ArrowUpRight, ScanLine } from "lucide-react";
 import type { Profile } from "@/lib/types";
 import { Mark } from "@/components/brand";
 import { ProfileQr } from "@/components/profile-qr";
@@ -77,14 +77,34 @@ function FounderCard({
               </>
             )}
           </span>
-          <ProfileQr profile={p} size={96} className="hero-card-qr" />
+          {p.region_code === "us" ? (
+            <span className="hero-qr-label">
+              <ProfileQr profile={p} size={96} className="hero-card-qr" />
+              <small>Scan me</small>
+            </span>
+          ) : (
+            <ProfileQr profile={p} size={96} className="hero-card-qr" />
+          )}
         </span>
         <span className="hero-card-name">{p.display_name}</span>
         <span className="hero-card-role">
           {p.title}, {companyName}
         </span>
-        <span className="hero-card-cta">
-          <ScanLine size={15} aria-hidden="true" /> Scan or tap to open
+        <span
+          className={
+            p.region_code === "us"
+              ? "hero-card-cta hero-card-cta-us"
+              : "hero-card-cta"
+          }
+        >
+          <span className="hero-scan-prompt">
+            <ScanLine size={15} aria-hidden="true" /> Scan or tap to open
+          </span>
+          {p.region_code === "us" && (
+            <span className="view-profile">
+              View profile <ArrowUpRight size={15} aria-hidden="true" />
+            </span>
+          )}
         </span>
       </Link>
     </div>

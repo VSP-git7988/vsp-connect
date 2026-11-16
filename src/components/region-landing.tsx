@@ -14,6 +14,7 @@ export async function RegionLanding({ region }: { region: Region }) {
     getCompany(),
   ]);
   // A region may list a single founder (the US lists only Arjun).
+  const isUS = region.code === "us";
   const single = profiles.length === 1;
   return (
     <main id="main">
@@ -32,78 +33,94 @@ export async function RegionLanding({ region }: { region: Region }) {
             <br />
             Building intelligent products. Creating what’s next.
           </p>
-          <a className="button primary" href="#people">
-            Meet our {single ? "founder" : "founders"}{" "}
-            <ArrowUpRight size={17} />
-          </a>
+          {!isUS && (
+            <a className="button primary" href="#people">
+              Meet our {single ? "founder" : "founders"}{" "}
+              <ArrowUpRight size={17} />
+            </a>
+          )}
           <div className="hero-caption">
             <span className="tiny-line" /> A new way to stay connected.
           </div>
         </Reveal>
-        <Reveal className="hero-art">
+        <Reveal className={isUS ? "hero-art hero-art-us" : "hero-art"}>
+          {isUS && (
+            <div className="section-heading">
+              <div>
+                <div className="eyebrow">
+                  THE PERSON BEHIND THE POSSIBILITIES
+                </div>
+                <h2>One mind. One vision.</h2>
+              </div>
+            </div>
+          )}
           <HeroCardStack profiles={profiles} companyName={company.name} />
-          <div className="art-caption">
-            <span className="status-dot" /> ONE CONNECTION. ENDLESS
-            POSSIBILITIES.
-          </div>
+          {!isUS && (
+            <div className="art-caption">
+              <span className="status-dot" /> ONE CONNECTION. ENDLESS
+              POSSIBILITIES.
+            </div>
+          )}
         </Reveal>
       </section>
-      <section id="people" className="people-section">
-        <div className="section-heading">
-          <div>
-            <div className="eyebrow">
-              THE {single ? "PERSON" : "PEOPLE"} BEHIND THE POSSIBILITIES
+      {!isUS && (
+        <section id="people" className="people-section">
+          <div className="section-heading">
+            <div>
+              <div className="eyebrow">
+                THE {single ? "PERSON" : "PEOPLE"} BEHIND THE POSSIBILITIES
+              </div>
+              <h2>
+                {single
+                  ? "One mind. One vision."
+                  : profiles.length === 2
+                    ? "Two minds. One vision."
+                    : "Many minds. One vision."}
+              </h2>
             </div>
-            <h2>
-              {single
-                ? "One mind. One vision."
-                : profiles.length === 2
-                  ? "Two minds. One vision."
-                  : "Many minds. One vision."}
-            </h2>
+            <span className="section-aside">
+              Built on curiosity. Driven by purpose.
+            </span>
           </div>
-          <span className="section-aside">
-            Built on curiosity. Driven by purpose.
-          </span>
-        </div>
-        <div className="founder-grid">
-          {profiles.map((p, i) => (
-            <Link
-              key={p.id}
-              href={regionPath(region.code, p.slug)}
-              className={`founder-card founder-${i % 2}`}
-              style={accentStyle(p)}
-            >
-              <div className="founder-top">
-                <Avatar profile={p} />
-                <span className="profile-arrow">
-                  <ArrowUpRight size={21} />
-                </span>
-              </div>
-              <h3>{p.display_name}</h3>
-              <div className="role">
-                {p.title} <span> / </span> {company.name}
-              </div>
-              {region.code === "us" ? (
-                p.credential && <p>{p.credential}</p>
-              ) : (
-                <p>{p.headline}</p>
-              )}
-              <div className="founder-bottom">
-                <span>
-                  <span className="status-dot" /> Let’s connect
-                </span>
-                <span className="view-profile">
-                  View profile <ArrowUpRight size={15} />
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
-        {!profiles.length && (
-          <p>No public profiles yet. Please check back soon.</p>
-        )}
-      </section>
+          <div className="founder-grid">
+            {profiles.map((p, i) => (
+              <Link
+                key={p.id}
+                href={regionPath(region.code, p.slug)}
+                className={`founder-card founder-${i % 2}`}
+                style={accentStyle(p)}
+              >
+                <div className="founder-top">
+                  <Avatar profile={p} />
+                  <span className="profile-arrow">
+                    <ArrowUpRight size={21} />
+                  </span>
+                </div>
+                <h3>{p.display_name}</h3>
+                <div className="role">
+                  {p.title} <span> / </span> {company.name}
+                </div>
+                {region.code === "us" ? (
+                  p.credential && <p>{p.credential}</p>
+                ) : (
+                  <p>{p.headline}</p>
+                )}
+                <div className="founder-bottom">
+                  <span>
+                    <span className="status-dot" /> Let’s connect
+                  </span>
+                  <span className="view-profile">
+                    View profile <ArrowUpRight size={15} />
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+          {!profiles.length && (
+            <p>No public profiles yet. Please check back soon.</p>
+          )}
+        </section>
+      )}
       <section className="company-strip">
         <div className="company-intro">
           <span className="eyebrow">
