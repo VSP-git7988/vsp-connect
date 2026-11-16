@@ -143,11 +143,20 @@ export async function ProfileView({
           <h2>Portfolio</h2>
           <div className="portfolio-grid">
             {portfolio.map((item) => (
-              <article className="portfolio-card" key={item.id}>
+              <article
+                className={
+                  region.code === "us"
+                    ? "portfolio-card portfolio-card-us"
+                    : "portfolio-card"
+                }
+                tabIndex={region.code === "us" ? 0 : undefined}
+                key={item.id}
+              >
                 {region.code !== "us" && (
                   <span className="eyebrow">{item.category}</span>
                 )}
                 <h3>{item.title}</h3>
+                <p>{item.summary}</p>
                 {region.code === "us" &&
                   item.url &&
                   portfolioImages[item.url] && (
@@ -159,7 +168,6 @@ export async function ProfileView({
                       height={800}
                     />
                   )}
-                {region.code !== "us" && <p>{item.summary}</p>}
                 {item.url && safeWebUrl(item.url) && (
                   <a
                     className="text-link"

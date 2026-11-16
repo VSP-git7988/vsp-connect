@@ -21,7 +21,9 @@ for (const width of [1440, 390])
       true,
     );
     expect(
-      await page.locator(".hero-card-qr").evaluate((el) => (el as HTMLImageElement).naturalWidth),
+      await page
+        .locator(".hero-card-qr")
+        .evaluate((el) => (el as HTMLImageElement).naturalWidth),
     ).toBeGreaterThan(0);
     const prompt = await page.locator(".hero-scan-prompt").boundingBox();
     const link = await page.locator(".hero-card .view-profile").boundingBox();
@@ -41,9 +43,8 @@ for (const width of [1440, 390])
     });
     await page.goto("/us/arjun-devireddy");
     await expect(page.locator(".portfolio-card")).toHaveCount(9);
-    await expect(
-      page.locator(".portfolio-card .eyebrow,.portfolio-card p"),
-    ).toHaveCount(0);
+    await expect(page.locator(".portfolio-card .eyebrow")).toHaveCount(0);
+    await expect(page.locator(".portfolio-card p")).toHaveCount(9);
     await expect(page.locator(".portfolio-card img")).toHaveCount(4);
     for (const img of await page.locator(".portfolio-card img").all())
       await expect(img).toHaveJSProperty("naturalWidth", 1200);

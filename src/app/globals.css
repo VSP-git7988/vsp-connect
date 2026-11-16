@@ -2795,3 +2795,33 @@ a.hero-card:hover .view-profile, a.hero-card:focus-visible .view-profile { borde
 @media (min-width: 768px) {
   .hero-art-us .hero-stage { --card-w: 350px; }
 }
+
+/* US portfolio: position-based accents, shared by hover and keyboard focus. */
+.portfolio-card-us {
+  transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+}
+.portfolio-card-us:nth-child(6n + 1) { --portfolio-accent: #3FD0C2; }
+.portfolio-card-us:nth-child(6n + 2) { --portfolio-accent: #B8A6FF; }
+.portfolio-card-us:nth-child(6n + 3) { --portfolio-accent: #F4B740; }
+.portfolio-card-us:nth-child(6n + 4) { --portfolio-accent: #60A5FA; }
+.portfolio-card-us:nth-child(6n + 5) { --portfolio-accent: #4ADE80; }
+.portfolio-card-us:nth-child(6n + 6) { --portfolio-accent: #F472B6; }
+.portfolio-card-us:hover,
+.portfolio-card-us:focus-visible,
+.portfolio-card-us:has(:focus-visible) {
+  border-color: var(--portfolio-accent);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--portfolio-accent) 22%, transparent);
+  transform: translateY(-2px);
+}
+.portfolio-card-us:focus-visible { outline: none; }
+@media (prefers-reduced-motion: reduce) {
+  .portfolio-card-us { transition: border-color 200ms ease; }
+  .portfolio-card-us:hover,
+  .portfolio-card-us:focus-visible,
+  .portfolio-card-us:has(:focus-visible) {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+.portfolio-card-us h3 { color: var(--portfolio-accent); }
